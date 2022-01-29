@@ -1,0 +1,28 @@
+{
+  "name": "hydrogen-api",
+  "version": "0.0.1",
+  "description": "A Social media backend api powered by nodejs and prisma",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harshmangalam/hydrogen-nodejs-server.git"
+  },
+  "keywords": [
+    "nodejs",
+    "expressjs",
+    "jwt-auth",
+    "prisma",
+    "postgresql",
+    "socket.io",
+    "social-media"
+  ],
+  "author": "Harsh Mangalam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/harshmangalam/hydrogen-nodejs-server/issues"
+  },
+  "homepage": "https://github.com/harshmangalam/hydrogen-nodejs-server#readme"
+}
