@@ -16,11 +16,12 @@ model User {
   lastName                String?
   email                   String     @unique
   password                String
-  gender                  UserGender
+  gender                  UserGender  @default(MALE)
   coverImage              String?
   profileImage            String?
   role                    UserRole   @default(USER)
-  isActive                Boolean    @default(false)
+  status                  UserStatus @default(ACTIVE)
+  lastSeen                DateTime   @default(now())
   isEmailVerified         Boolean    @default(false)
   createdAt               DateTime   @default(now())
   updatedAt               DateTime   @updatedAt
@@ -64,4 +65,10 @@ enum UserGender {
   MALE
   FEMALE
   OTHER
+}
+
+enum UserStatus {
+  ACTIVE
+  IDLE
+  LOGOUT
 }
