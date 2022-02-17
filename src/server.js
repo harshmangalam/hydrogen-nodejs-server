@@ -3,7 +3,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
-const { PORT, ORIGIN } = require("./config/env.config");
+const { PORT, ORIGIN, NODE_ENV } = require("./config/env.config");
 const app = express();
 const http = require("http").createServer(app);
 
@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 // logging in development environment
 
-if (process.env.NODE_ENV === "developement") {
+if (NODE_ENV === "dev") {
   const morgan = require("morgan");
   app.use(morgan("dev"));
 }
