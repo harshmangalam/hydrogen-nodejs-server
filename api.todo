@@ -3,3 +3,12 @@ Prisma schema
     User
 
     
+Authentication
+    signup
+    login
+    me
+
+Middleware
+    auth 
+    admin
+
