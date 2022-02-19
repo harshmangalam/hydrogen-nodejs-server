@@ -33,7 +33,6 @@ model User {
 
 model Post {
   id                      String           @id @default(uuid())
-  title                   String
   content                 String?
   audience                PostAudienceEnum @default(PUBLIC)
   author                  User             @relation(fields: [authorId], references: [id])
