@@ -9,6 +9,7 @@ const http = require("http").createServer(app);
 
 // import all routes
 const authRoutes = require("./routes/auth.route");
+const postRoutes = require("./routes/post.route");
 
 // middlewares
 
@@ -46,6 +47,7 @@ app.get("/", (req, res) => {
 
 // routes middleware
 app.use("/api/auth", authRoutes);
+app.use("/api/posts", postRoutes);
 
 // page not found error handling  middleware
 
