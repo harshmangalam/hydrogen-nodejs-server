@@ -41,6 +41,7 @@ exports.fetchPost = async (req, res, next) => {
 };
 
 exports.createPost = async (req, res, next) => {
+  console.log(req.body)
   const userId = res.locals.user.id;
   const {
     content,
