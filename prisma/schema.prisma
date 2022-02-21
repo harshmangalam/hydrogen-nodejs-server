@@ -16,7 +16,7 @@ model User {
   lastName                String?
   email                   String     @unique
   password                String
-  gender                  UserGender  @default(MALE)
+  gender                  UserGender @default(MALE)
   coverImage              String?
   profileImage            String?
   role                    UserRole   @default(USER)
@@ -25,6 +25,10 @@ model User {
   isEmailVerified         Boolean    @default(false)
   createdAt               DateTime   @default(now())
   updatedAt               DateTime   @updatedAt
+  friendsOf               User[]     @relation("_UsersFriends", references: [id])
+  myFriends               User[]     @relation("_UsersFriends", references: [id])
+  friendsRequestsSent     User[]     @relation("_FriendsRequests", references: [id])
+  friendsRequestsReceived User[]     @relation("_FriendsRequests", references: [id])
   taggedInPosts           Post[]     @relation("_UsersPostsTag")
   specificAudienceInPosts Post[]     @relation("_UsersPostsSpecificAudience")
   posts                   Post[]
