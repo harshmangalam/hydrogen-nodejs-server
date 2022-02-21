@@ -2,7 +2,17 @@ const { db } = require("../utils/db");
 
 exports.fetchPosts = async (req, res, next) => {
   try {
-    const posts = await db.post.findMany();
+    const posts = await db.post.findMany({
+      include: {
+        author: {
+          select: {
+            firstName: true,
+            coverImage: true
+          },
+        },
+      },
+    });
+
     return res.status(200).json({
       type: "success",
       message: "Fetch posts",
@@ -27,7 +37,7 @@ exports.fetchPost = async (req, res, next) => {
     if (!post) {
       return next({ status: 404, message: "Post not found" });
     }
-    
+
     return res.status(200).json({
       type: "success",
       message: "Fetch post",
@@ -41,7 +51,7 @@ exports.fetchPost = async (req, res, next) => {
 };
 
 exports.createPost = async (req, res, next) => {
-  console.log(req.body)
+  console.log(req.body);
   const userId = res.locals.user.id;
   const {
     content,
