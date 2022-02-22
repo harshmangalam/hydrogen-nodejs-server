@@ -8,7 +8,7 @@ const {
   fetchFriendsSuggestion,
   fetchFriends,
   cancelSentRequest,
-  ignoreReceivedRequest
+  ignoreReceivedRequest,
 } = require("../controllers/friends.controller");
 const checkAuth = require("../middlewares/auth.middleware");
 
@@ -18,10 +18,14 @@ router.get("/", checkAuth, fetchFriends);
 router.get("/suggestions", checkAuth, fetchFriendsSuggestion);
 router.get("/sent_requests", checkAuth, fetchFriendsRequestsSent);
 router.get("/received_requests", checkAuth, fetchFriendsRequestsReceived);
-router.post("/send_request/:userId", checkAuth, sendFriendRequest);
-router.post("/accept_request/:userId", checkAuth, acceptFriendRequest);
-router.post("/cancel_sent_request/:userId", checkAuth, cancelSentRequest);
-router.post("/ignore_received_request/:userId", checkAuth, ignoreReceivedRequest);
-router.post("/remove/:userId", checkAuth, removeFromFriendslist);
+router.patch("/send_request/:userId", checkAuth, sendFriendRequest);
+router.patch("/accept_request/:userId", checkAuth, acceptFriendRequest);
+router.delete("/cancel_sent_request/:userId", checkAuth, cancelSentRequest);
+router.delete(
+  "/ignore_received_request/:userId",
+  checkAuth,
+  ignoreReceivedRequest
+);
+router.delete("/remove/:userId", checkAuth, removeFromFriendslist);
 
 module.exports = router;

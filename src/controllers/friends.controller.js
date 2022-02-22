@@ -46,7 +46,7 @@ const fetchFriends = async (req, res, next) => {
   const currentUser = res.locals.user;
 
   try {
-    const users = await db.user.findUnique({
+    const user = await db.user.findUnique({
       where: {
         id: currentUser.id,
       },
@@ -56,6 +56,8 @@ const fetchFriends = async (req, res, next) => {
             id: true,
             firstName: true,
             profileImage: true,
+            status: true,
+            lastSeen: true,
           },
         },
       },
@@ -63,9 +65,9 @@ const fetchFriends = async (req, res, next) => {
 
     return res.status(200).json({
       type: "success",
-      message: "Fetch friends suggestions",
+      message: "Fetch my friends",
       data: {
-        users,
+        users: user.myFriends,
       },
     });
   } catch (error) {
@@ -78,7 +80,7 @@ const fetchFriendsRequestsSent = async (req, res, next) => {
   const currentUser = res.locals.user;
 
   try {
-    const users = await db.user.findUnique({
+    const user = await db.user.findUnique({
       where: {
         id: currentUser.id,
       },
@@ -97,7 +99,7 @@ const fetchFriendsRequestsSent = async (req, res, next) => {
       type: "success",
       message: "Fetch friends requests sent",
       data: {
-        users,
+        users: user.friendsRequestsSent,
       },
     });
   } catch (error) {
@@ -111,7 +113,7 @@ const fetchFriendsRequestsReceived = async (req, res, next) => {
   const currentUser = res.locals.user;
 
   try {
-    const users = await db.user.findUnique({
+    const user = await db.user.findUnique({
       where: {
         id: currentUser.id,
       },
@@ -130,7 +132,7 @@ const fetchFriendsRequestsReceived = async (req, res, next) => {
       type: "success",
       message: "Fetch friends requests received",
       data: {
-        users,
+        users: user.friendsRequestsReceived,
       },
     });
   } catch (error) {
@@ -190,9 +192,7 @@ const sendFriendRequest = async (req, res, next) => {
     return res.status(200).json({
       type: "success",
       message: "Friend request sent",
-      data: {
-        user: sentRequestToUser,
-      },
+      data: null,
     });
   } catch (error) {
     next(error);
@@ -310,9 +310,7 @@ const acceptFriendRequest = async (req, res, next) => {
     return res.status(200).json({
       type: "success",
       message: "Both of you are now friends",
-      data: {
-        user: myFriends,
-      },
+      data: null,
     });
   } catch (error) {
     next(error);
@@ -394,16 +392,14 @@ const removeFromFriendslist = async (req, res, next) => {
     return res.status(200).json({
       type: "success",
       message: "Both of you are not friends from now",
-      data: {
-        user: myFriends,
-      },
+      data: null,
     });
   } catch (error) {
     next(error);
   }
 };
 
-// remove sent requests 
+// remove sent requests
 const cancelSentRequest = async (req, res, next) => {
   const currentUser = res.locals.user;
   const userId = req.params.userId;
@@ -469,15 +465,12 @@ const cancelSentRequest = async (req, res, next) => {
     return res.status(200).json({
       type: "success",
       message: "Friend request cancelled",
-      data: {
-        user: myFriends,
-      },
+      data: null,
     });
   } catch (error) {
     next(error);
   }
 };
-
 
 // ignore received requests
 
@@ -503,7 +496,10 @@ const ignoreReceivedRequest = async (req, res, next) => {
     });
 
     if (!user.friendsRequestsReceived.length) {
-      return next({ status: 400, message: "You have not received friend request" });
+      return next({
+        status: 400,
+        message: "You have not received friend request",
+      });
     }
 
     // remove from sent lists
@@ -546,9 +542,7 @@ const ignoreReceivedRequest = async (req, res, next) => {
     return res.status(200).json({
       type: "success",
       message: "Friend request ignored successfully",
-      data: {
-        user: myFriends,
-      },
+      data: null,
     });
   } catch (error) {
     next(error);
@@ -564,5 +558,5 @@ module.exports = {
   fetchFriendsSuggestion,
   fetchFriends,
   cancelSentRequest,
-  ignoreReceivedRequest
+  ignoreReceivedRequest,
 };
