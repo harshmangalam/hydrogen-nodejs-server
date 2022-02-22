@@ -8,9 +8,18 @@ const fetchFriendsSuggestion = async (req, res, next) => {
   try {
     const users = await db.user.findMany({
       where: {
-        NOT: {
-          id: currentUser.id,
-        },
+        NOT: [
+          {
+            friendsRequestsReceived: {
+              some: {
+                id: currentUser.id,
+              },
+            },
+          },
+          {
+            id: currentUser.id,
+          },
+        ],
       },
       select: {
         id: true,
@@ -394,6 +403,158 @@ const removeFromFriendslist = async (req, res, next) => {
   }
 };
 
+// remove sent requests 
+const cancelSentRequest = async (req, res, next) => {
+  const currentUser = res.locals.user;
+  const userId = req.params.userId;
+  try {
+    // check if available in sent list
+    const user = await db.user.findUnique({
+      where: {
+        id: currentUser.id,
+      },
+      select: {
+        friendsRequestsSent: {
+          where: {
+            id: userId,
+          },
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!user.friendsRequestsSent.length) {
+      return next({ status: 400, message: "You have not sent friend request" });
+    }
+
+    // remove from sent lists
+
+    const myFriends = await db.user.update({
+      where: {
+        id: currentUser.id,
+      },
+      data: {
+        friendsRequestsSent: {
+          disconnect: {
+            id: userId,
+          },
+        },
+      },
+      select: {
+        myFriends: {
+          select: {
+            id: true,
+            firstName: true,
+            profileImage: true,
+          },
+        },
+      },
+    });
+
+    await db.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        friendsRequestsReceived: {
+          disconnect: {
+            id: currentUser.id,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json({
+      type: "success",
+      message: "Friend request cancelled",
+      data: {
+        user: myFriends,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+// ignore received requests
+
+const ignoreReceivedRequest = async (req, res, next) => {
+  const currentUser = res.locals.user;
+  const userId = req.params.userId;
+  try {
+    // check if available in received list
+    const user = await db.user.findUnique({
+      where: {
+        id: currentUser.id,
+      },
+      select: {
+        friendsRequestsReceived: {
+          where: {
+            id: userId,
+          },
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!user.friendsRequestsReceived.length) {
+      return next({ status: 400, message: "You have not received friend request" });
+    }
+
+    // remove from sent lists
+
+    const myFriends = await db.user.update({
+      where: {
+        id: currentUser.id,
+      },
+      data: {
+        friendsRequestsReceived: {
+          disconnect: {
+            id: userId,
+          },
+        },
+      },
+      select: {
+        myFriends: {
+          select: {
+            id: true,
+            firstName: true,
+            profileImage: true,
+          },
+        },
+      },
+    });
+
+    await db.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        friendsRequestsSent: {
+          disconnect: {
+            id: currentUser.id,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json({
+      type: "success",
+      message: "Friend request ignored successfully",
+      data: {
+        user: myFriends,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   fetchFriendsRequestsSent,
   fetchFriendsRequestsReceived,
@@ -401,5 +562,7 @@ module.exports = {
   acceptFriendRequest,
   removeFromFriendslist,
   fetchFriendsSuggestion,
-  fetchFriends
+  fetchFriends,
+  cancelSentRequest,
+  ignoreReceivedRequest
 };
