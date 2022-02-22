@@ -1,5 +1,69 @@
 const { db } = require("../utils/db");
 
+// fetch friends suggestion
+
+const fetchFriendsSuggestion = async (req, res, next) => {
+  const currentUser = res.locals.user;
+
+  try {
+    const users = await db.user.findMany({
+      where: {
+        NOT: {
+          id: currentUser.id,
+        },
+      },
+      select: {
+        id: true,
+        firstName: true,
+        profileImage: true,
+      },
+    });
+
+    return res.status(200).json({
+      type: "success",
+      message: "Fetch friends suggestions",
+      data: {
+        users,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// fetch my friends
+
+const fetchFriends = async (req, res, next) => {
+  const currentUser = res.locals.user;
+
+  try {
+    const users = await db.user.findUnique({
+      where: {
+        id: currentUser.id,
+      },
+      select: {
+        myFriends: {
+          select: {
+            id: true,
+            firstName: true,
+            profileImage: true,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json({
+      type: "success",
+      message: "Fetch friends suggestions",
+      data: {
+        users,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // fetch friends requests sent
 const fetchFriendsRequestsSent = async (req, res, next) => {
   const currentUser = res.locals.user;
@@ -336,4 +400,6 @@ module.exports = {
   sendFriendRequest,
   acceptFriendRequest,
   removeFromFriendslist,
+  fetchFriendsSuggestion,
+  fetchFriends
 };
