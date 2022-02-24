@@ -11,28 +11,32 @@ datasource db {
 }
 
 model User {
-  id                      String     @id @default(uuid())
+  id                      String      @id @default(uuid())
   firstName               String
   lastName                String?
-  email                   String     @unique
+  email                   String      @unique
   password                String
-  gender                  UserGender @default(MALE)
+  gender                  UserGender  @default(MALE)
   coverImage              String?
   profileImage            String?
-  role                    UserRole   @default(USER)
-  status                  UserStatus @default(ACTIVE)
-  lastSeen                DateTime   @default(now())
-  isEmailVerified         Boolean    @default(false)
-  createdAt               DateTime   @default(now())
-  updatedAt               DateTime   @updatedAt
-  friendsOf               User[]     @relation("_UsersFriends", references: [id])
-  myFriends               User[]     @relation("_UsersFriends", references: [id])
-  friendsRequestsSent     User[]     @relation("_FriendsRequests", references: [id])
-  friendsRequestsReceived User[]     @relation("_FriendsRequests", references: [id])
-  taggedInPosts           Post[]     @relation("_UsersPostsTag")
-  specificAudienceInPosts Post[]     @relation("_UsersPostsSpecificAudience")
+  role                    UserRole    @default(USER)
+  status                  UserStatus  @default(ACTIVE)
+  lastSeen                DateTime    @default(now())
+  isEmailVerified         Boolean     @default(false)
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
+  friendsOf               User[]      @relation("_UsersFriends", references: [id])
+  myFriends               User[]      @relation("_UsersFriends", references: [id])
+  friendsRequestsSent     User[]      @relation("_FriendsRequests", references: [id])
+  friendsRequestsReceived User[]      @relation("_FriendsRequests", references: [id])
+  taggedInPosts           Post[]      @relation("_UsersPostsTag")
+  specificAudienceInPosts Post[]      @relation("_UsersPostsSpecificAudience")
   posts                   Post[]
-  likePosts               Post[]     @relation("_UsersPostsLike")
+  likePosts               Post[]      @relation("_UsersPostsLike")
+  membersInGroups         Group[]     @relation("_GroupMembers")
+  groupsCreated           Group[]
+  groupPost               GroupPost[] @relation("_GroupPostsCreated")
+  groupPostLikes          GroupPost[] @relation("_UsersGroupPostsLikes")
 }
 
 model Post {
@@ -41,15 +45,40 @@ model Post {
   audience                PostAudienceEnum @default(PUBLIC)
   author                  User             @relation(fields: [authorId], references: [id])
   authorId                String
-  images                  String[]
+  image                   String?
   feeling                 String?
   checkIn                 String?
-  gif                     String?
   taggedFriends           User[]           @relation("_UsersPostsTag")
   specificAudienceFriends User[]           @relation("_UsersPostsSpecificAudience")
   likes                   User[]           @relation("_UsersPostsLike")
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
+
+}
+
+model Group {
+  id           String       @id @default(uuid())
+  name         String
+  privacy      GroupPrivacy @default(PUBLIC)
+  members      User[]       @relation("_GroupMembers")
+  admin        User         @relation(references: [id], fields: [adminId])
+  adminId      String
+  coverImage   String?
+  profileImage String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+
+}
+
+model GroupPost {
+  id          String  @id @default(uuid())
+  content     String?
+  author      User    @relation(name: "_GroupPostsCreated", fields: [authorId], references: [id])
+  authorId    String
+  image       String?
+  likes       User[]  @relation("_UsersGroupPostsLikes")
+  isPublished Boolean @default(false)
 }
 
 enum PostAudienceEnum {
@@ -74,4 +103,9 @@ enum UserStatus {
   ACTIVE
   IDLE
   LOGOUT
+}
+
+enum GroupPrivacy {
+  PUBLIC
+  PRIVATE
 }

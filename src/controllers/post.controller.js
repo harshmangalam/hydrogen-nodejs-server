@@ -51,15 +51,13 @@ exports.fetchPost = async (req, res, next) => {
 };
 
 exports.createPost = async (req, res, next) => {
-  console.log(req.body);
-  const userId = res.locals.user.id;
+  const currentUser = res.locals.user
   const {
     content,
     audience,
     specificAudienceFriends = [],
-    images = [],
+    image,
     feeling,
-    gif,
     checkIn,
     taggedFriends = [],
   } = req.body;
@@ -67,14 +65,13 @@ exports.createPost = async (req, res, next) => {
     const post = await db.post.create({
       data: {
         content,
-        images,
+        image,
         feeling,
-        gif,
         checkIn,
         audience,
         author: {
           connect: {
-            id: userId,
+            id: currentUser.id,
           },
         },
         taggedFriends: taggedFriends?.length
