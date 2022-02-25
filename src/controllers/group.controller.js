@@ -45,6 +45,16 @@ const fetchMyCreatedGroups = async (req, res, next) => {
           id: currentUser.id,
         },
       },
+      select: {
+        id: true,
+        name: true,
+        profileImage: true,
+        _count: {
+          select: {
+            members: true,
+          },
+        },
+      },
     });
 
     return res.status(200).json({
@@ -127,11 +137,20 @@ const fetchGroupsJoined = async (req, res, next) => {
 const createGroup = async (req, res, next) => {
   try {
     const currentUser = res.locals.user;
-    const { name, coverImage, privacy, invitedPeople = [] } = req.body;
+    const {
+      name,
+      coverImage,
+      profileImage,
+      privacy,
+      invitedPeople = [],
+    } = req.body;
+
+    console.log(privacy)
     const group = await db.group.create({
       data: {
         name,
         coverImage,
+        profileImage,
         privacy,
         admin: {
           connect: {
@@ -145,6 +164,9 @@ const createGroup = async (req, res, next) => {
               })),
             }
           : undefined,
+      },
+      select: {
+        id: true,
       },
     });
 
