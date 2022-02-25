@@ -127,7 +127,7 @@ const fetchGroupsJoined = async (req, res, next) => {
 const createGroup = async (req, res, next) => {
   try {
     const currentUser = res.locals.user;
-    const { name, coverImage, privacy } = req.body;
+    const { name, coverImage, privacy, invitedPeople = [] } = req.body;
     const group = await db.group.create({
       data: {
         name,
@@ -138,6 +138,13 @@ const createGroup = async (req, res, next) => {
             id: currentUser.id,
           },
         },
+        invitedPeople: invitedPeople.length
+          ? {
+              connect: invitedPeople.map((id) => ({
+                id,
+              })),
+            }
+          : undefined,
       },
     });
 
