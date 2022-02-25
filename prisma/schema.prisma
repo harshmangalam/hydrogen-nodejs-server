@@ -37,6 +37,8 @@ model User {
   groupsCreated           Group[]
   groupPosts              GroupPost[] @relation("_GroupPostsCreated")
   groupPostLikes          GroupPost[] @relation("_UsersGroupPostsLikes")
+  invitedInGroups         Group[]     @relation("_UsersGroupsInvite")
+
 }
 
 model Post {
@@ -57,17 +59,18 @@ model Post {
 }
 
 model Group {
-  id           String       @id @default(uuid())
-  name         String
-  privacy      GroupPrivacy @default(PUBLIC)
-  members      User[]       @relation("_GroupMembers")
-  admin        User         @relation(references: [id], fields: [adminId])
-  adminId      String
-  coverImage   String?
-  profileImage String?
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  posts        GroupPost[]
+  id            String       @id @default(uuid())
+  name          String
+  privacy       GroupPrivacy @default(PUBLIC)
+  members       User[]       @relation("_GroupMembers")
+  admin         User         @relation(references: [id], fields: [adminId])
+  adminId       String
+  coverImage    String?
+  profileImage  String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  posts         GroupPost[]
+  invitedPeople User[]       @relation("_UsersGroupsInvite")
 
 }
 

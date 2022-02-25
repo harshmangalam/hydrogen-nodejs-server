@@ -18,7 +18,7 @@ router.post("/", checkAuth, createGroup);
 router.post("/create_post", checkAuth, createGroupPost);
 router.get("/", checkAuth, fetchMyCreatedGroups);
 router.get("/my_posts", checkAuth, fetchMyCreatedGroupPosts);
-router.get("/suggestions", fetchGroupSuggestions);
+router.get("/suggestions", checkAuth, fetchGroupSuggestions);
 router.get("/invited", checkAuth, fetchGroupsInvited);
 router.get("/joined", checkAuth, fetchGroupsJoined);
 router.get("/notifications", checkAuth, fetchGroupNotifications);
