@@ -35,7 +35,7 @@ model User {
   likePosts               Post[]      @relation("_UsersPostsLike")
   membersInGroups         Group[]     @relation("_GroupMembers")
   groupsCreated           Group[]
-  groupPost               GroupPost[] @relation("_GroupPostsCreated")
+  groupPosts              GroupPost[] @relation("_GroupPostsCreated")
   groupPostLikes          GroupPost[] @relation("_UsersGroupPostsLikes")
 }
 
@@ -67,7 +67,7 @@ model Group {
   profileImage String?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
-
+  posts        GroupPost[]
 
 }
 
@@ -79,6 +79,8 @@ model GroupPost {
   image       String?
   likes       User[]  @relation("_UsersGroupPostsLikes")
   isPublished Boolean @default(false)
+  group       Group   @relation(fields: [groupId], references: [id])
+  groupId     String
 }
 
 enum PostAudienceEnum {

@@ -1,5 +1,15 @@
+const { db } = require("../utils/db");
+
 const fetchGroupSuggestions = async (req, res, next) => {
   try {
+    const groups = await db.group.findMany();
+    return res.status(200).json({
+      type: "success",
+      message: "Fetch groups suggestion",
+      body: {
+        groups,
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -11,12 +21,6 @@ const fetchMyCreatedGroupPosts = async (req, res, next) => {
   }
 };
 const fetchMyCreatedGroups = async (req, res, next) => {
-  try {
-  } catch (error) {
-    next(error);
-  }
-};
-const fetchGroupSuggestions = async (req, res, next) => {
   try {
   } catch (error) {
     next(error);

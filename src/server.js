@@ -11,6 +11,7 @@ const http = require("http").createServer(app);
 const authRoutes = require("./routes/auth.route");
 const postRoutes = require("./routes/post.route");
 const friendsRoutes = require("./routes/friends.route");
+const groupsRoutes = require("./routes/group.route");
 
 // middlewares
 
@@ -50,6 +51,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/friends", friendsRoutes);
+app.use("/api/groups", groupsRoutes);
 
 // page not found error handling  middleware
 

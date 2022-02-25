@@ -1,6 +1,5 @@
 const { Router } = require("express");
-const { fetchGroupSuggestions } = require("../controllers/group.controller");
-const checkAuth = require("../middlewares/admin.middleware");
+const checkAuth = require("../middlewares/auth.middleware");
 const {
   fetchGroupSuggestions,
   createGroup,
