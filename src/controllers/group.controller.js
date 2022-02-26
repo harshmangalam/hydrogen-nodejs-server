@@ -346,7 +346,7 @@ const joinGroup = async (req, res, next) => {
     });
 
     if (alreadyMember) {
-      return next({ status: 400, message: "You are already member" });
+      return next({ status: 400, message: "You are already member of this group" });
     }
 
     await db.group.update({
@@ -363,7 +363,7 @@ const joinGroup = async (req, res, next) => {
     });
     return res.status(201).json({
       type: "success",
-      message: "Joined group successfully",
+      message: "Group joined successfully",
       data: null,
     });
   } catch (error) {
@@ -405,7 +405,7 @@ const leaveGroup = async (req, res, next) => {
     });
 
     if (!isMember) {
-      return next({ status: 400, message: "Yo`ve not joined the group" });
+      return next({ status: 400, message: "Yoy are not the member of this group" });
     }
 
     await db.group.update({
@@ -422,7 +422,7 @@ const leaveGroup = async (req, res, next) => {
     });
     return res.status(201).json({
       type: "success",
-      message: "Yo`ve leaved the group successfully",
+      message: "Group left successfully",
       data: null,
     });
   } catch (error) {
