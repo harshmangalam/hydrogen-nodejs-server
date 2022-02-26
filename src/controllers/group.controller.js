@@ -2,11 +2,28 @@ const { db } = require("../utils/db");
 
 const fetchGroupSuggestions = async (req, res, next) => {
   try {
-    const groups = await db.group.findMany();
+    const currentUser = res.locals.user
+    const groups = await db.group.findMany({
+      where:{
+       NOT:{
+         adminId:currentUser.id
+       }
+      },
+      select: {
+        id: true,
+        name: true,
+        profileImage: true,
+        _count: {
+          select: {
+            members: true,
+          },
+        },
+      },
+    });
     return res.status(200).json({
       type: "success",
       message: "Fetch groups suggestion",
-      body: {
+      data: {
         groups,
       },
     });
@@ -251,13 +268,13 @@ const fetchGroupDetails = async (req, res, next) => {
 
         _count: {
           select: {
-            members:true,
+            members: true,
           },
         },
       },
     });
-    if(!group){
-      return next({status:404,message:"Group not found"})
+    if (!group) {
+      return next({ status: 404, message: "Group not found" });
     }
     return res.status(200).json({
       type: "success",
