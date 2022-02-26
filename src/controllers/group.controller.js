@@ -101,7 +101,28 @@ const fetchGroupNotifications = async (req, res, next) => {
 const fetchGroupsFeed = async (req, res, next) => {
   try {
     const currentUser = res.locals.user;
-    const posts = await db.groupPost.findMany();
+    const posts = await db.groupPost.findMany({
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        author: {
+          select: {
+            id: true,
+            firstName: true,
+            profileImage: true,
+          },
+        },
+        image: true,
+        group: {
+          select: {
+            id: true,
+            name: true,
+            profileImage: true,
+          },
+        },
+      },
+    });
     return res.status(200).json({
       type: "success",
       message: "Fetch group feed ",
@@ -145,7 +166,7 @@ const createGroup = async (req, res, next) => {
       invitedPeople = [],
     } = req.body;
 
-    console.log(privacy)
+    console.log(privacy);
     const group = await db.group.create({
       data: {
         name,
@@ -214,6 +235,42 @@ const createGroupPost = async (req, res, next) => {
   }
 };
 
+const fetchGroupDetails = async (req, res, next) => {
+  try {
+    const groupId = req.params.groupId;
+    const group = await db.group.findUnique({
+      where: {
+        id: groupId,
+      },
+      select: {
+        id: true,
+        name: true,
+        privacy: true,
+        coverImage: true,
+        profileImage: true,
+
+        _count: {
+          select: {
+            members:true,
+          },
+        },
+      },
+    });
+    if(!group){
+      return next({status:404,message:"Group not found"})
+    }
+    return res.status(200).json({
+      type: "success",
+      message: "Fetch groups suggestion",
+      data: {
+        group,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   fetchGroupSuggestions,
   createGroup,
@@ -224,4 +281,5 @@ module.exports = {
   fetchGroupNotifications,
   fetchGroupsFeed,
   fetchGroupsJoined,
+  fetchGroupDetails,
 };

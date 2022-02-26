@@ -75,15 +75,17 @@ model Group {
 }
 
 model GroupPost {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
   content     String?
-  author      User    @relation(name: "_GroupPostsCreated", fields: [authorId], references: [id])
+  author      User     @relation(name: "_GroupPostsCreated", fields: [authorId], references: [id])
   authorId    String
   image       String?
-  likes       User[]  @relation("_UsersGroupPostsLikes")
-  isPublished Boolean @default(false)
-  group       Group   @relation(fields: [groupId], references: [id])
+  likes       User[]   @relation("_UsersGroupPostsLikes")
+  isPublished Boolean  @default(false)
+  group       Group    @relation(fields: [groupId], references: [id])
   groupId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum PostAudienceEnum {
