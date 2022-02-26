@@ -105,6 +105,16 @@ const fetchGroupsInvited = async (req, res, next) => {
           },
         },
       },
+      select: {
+        id: true,
+        name: true,
+        profileImage: true,
+        _count: {
+          select: {
+            members: true,
+          },
+        },
+      },
     });
 
     return res.status(200).json({
@@ -186,9 +196,9 @@ const fetchGroupsJoined = async (req, res, next) => {
     return res.status(200).json({
       type: "success",
       message: "Fetch joined groups",
-      data:{
-        groups
-      }
+      data: {
+        groups,
+      },
     });
   } catch (error) {
     next(error);
@@ -346,7 +356,10 @@ const joinGroup = async (req, res, next) => {
     });
 
     if (alreadyMember) {
-      return next({ status: 400, message: "You are already member of this group" });
+      return next({
+        status: 400,
+        message: "You are already member of this group",
+      });
     }
 
     await db.group.update({
@@ -405,7 +418,10 @@ const leaveGroup = async (req, res, next) => {
     });
 
     if (!isMember) {
-      return next({ status: 400, message: "Yoy are not the member of this group" });
+      return next({
+        status: 400,
+        message: "Yoy are not the member of this group",
+      });
     }
 
     await db.group.update({
