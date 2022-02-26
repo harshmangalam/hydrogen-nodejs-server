@@ -171,11 +171,24 @@ const fetchGroupsJoined = async (req, res, next) => {
           },
         },
       },
+      select: {
+        id: true,
+        name: true,
+        profileImage: true,
+        _count: {
+          select: {
+            members: true,
+          },
+        },
+      },
     });
 
     return res.status(200).json({
       type: "success",
       message: "Fetch joined groups",
+      data:{
+        groups
+      }
     });
   } catch (error) {
     next(error);
