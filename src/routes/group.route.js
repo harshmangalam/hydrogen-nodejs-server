@@ -11,6 +11,9 @@ const {
   fetchGroupsFeed,
   fetchGroupsJoined,
   fetchGroupDetails,
+  joinGroup,
+  leaveGroup,
+  deleteGroup,
 } = require("../controllers/group.controller");
 
 const router = Router();
@@ -26,5 +29,8 @@ router.get("/notifications", checkAuth, fetchGroupNotifications);
 router.get("/feed", checkAuth, fetchGroupsFeed);
 
 router.get("/:groupId", checkAuth, fetchGroupDetails);
+router.patch("/:groupId/join", checkAuth, joinGroup);
+router.delete("/:groupId/leave", checkAuth, leaveGroup);
+router.delete("/:groupId/remove", checkAuth, deleteGroup);
 
 module.exports = router;

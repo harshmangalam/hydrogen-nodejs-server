@@ -2,12 +2,21 @@ const { db } = require("../utils/db");
 
 const fetchGroupSuggestions = async (req, res, next) => {
   try {
-    const currentUser = res.locals.user
+    const currentUser = res.locals.user;
     const groups = await db.group.findMany({
-      where:{
-       NOT:{
-         adminId:currentUser.id
-       }
+      where: {
+        NOT: {
+          OR: [
+            { adminId: currentUser.id },
+            {
+              members: {
+                some: {
+                  id: currentUser.id,
+                },
+              },
+            },
+          ],
+        },
       },
       select: {
         id: true,
@@ -251,7 +260,6 @@ const createGroupPost = async (req, res, next) => {
     next(error);
   }
 };
-
 const fetchGroupDetails = async (req, res, next) => {
   try {
     const groupId = req.params.groupId;
@@ -287,6 +295,168 @@ const fetchGroupDetails = async (req, res, next) => {
     next(error);
   }
 };
+const joinGroup = async (req, res, next) => {
+  try {
+    const currentUser = res.locals.user;
+    const groupId = req.params.groupId;
+    const findGroup = await db.group.findUnique({
+      where: {
+        id: groupId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!findGroup) {
+      return next({ status: 404, message: "Group not found" });
+    }
+
+    const alreadyMember = await db.group.findFirst({
+      where: {
+        AND: [
+          {
+            id: groupId,
+          },
+          {
+            members: {
+              some: {
+                id: currentUser.id,
+              },
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (alreadyMember) {
+      return next({ status: 400, message: "You are already member" });
+    }
+
+    await db.group.update({
+      where: {
+        id: groupId,
+      },
+      data: {
+        members: {
+          connect: {
+            id: currentUser.id,
+          },
+        },
+      },
+    });
+    return res.status(201).json({
+      type: "success",
+      message: "Joined group successfully",
+      data: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const leaveGroup = async (req, res, next) => {
+  try {
+    const currentUser = res.locals.user;
+    const groupId = req.params.groupId;
+    const findGroup = await db.group.findUnique({
+      where: {
+        id: groupId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!findGroup) {
+      return next({ status: 404, message: "Group not found" });
+    }
+
+    const isMember = await db.group.findFirst({
+      where: {
+        AND: [
+          {
+            id: groupId,
+          },
+          {
+            members: {
+              some: {
+                id: currentUser.id,
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    if (!isMember) {
+      return next({ status: 400, message: "Yo`ve not joined the group" });
+    }
+
+    await db.group.update({
+      where: {
+        id: groupId,
+      },
+      data: {
+        members: {
+          disconnect: {
+            id: currentUser.id,
+          },
+        },
+      },
+    });
+    return res.status(201).json({
+      type: "success",
+      message: "Yo`ve leaved the group successfully",
+      data: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const deleteGroup = async (req, res, next) => {
+  try {
+    const currentUser = res.locals.user;
+    const groupId = req.params.groupId;
+
+    const group = await db.group.findUnique({
+      where: {
+        id: groupId,
+      },
+      select: {
+        id: true,
+        adminId,
+      },
+    });
+
+    if (!group) {
+      return next({ status: 404, message: "Group not found" });
+    }
+
+    const isGroupAdmin = group.adminId === currentUser.id;
+    if (!isGroupAdmin) {
+      return next({
+        status: 401,
+        message: "Yo`re not the admin of this group",
+      });
+    }
+
+    await db.group.delete({
+      where: {
+        id: groupId,
+      },
+    });
+    return res.status(201).json({
+      type: "success",
+      message: "Group deleted successfully",
+      data: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   fetchGroupSuggestions,
@@ -299,4 +469,8 @@ module.exports = {
   fetchGroupsFeed,
   fetchGroupsJoined,
   fetchGroupDetails,
+
+  joinGroup,
+  leaveGroup,
+  deleteGroup,
 };
