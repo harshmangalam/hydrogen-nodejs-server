@@ -14,6 +14,8 @@ const {
   joinGroup,
   leaveGroup,
   deleteGroup,
+  acceptGroupInvitation,
+  rejectGroupInvitation,
 } = require("../controllers/group.controller");
 
 const router = Router();
@@ -32,5 +34,8 @@ router.get("/:groupId", checkAuth, fetchGroupDetails);
 router.patch("/:groupId/join", checkAuth, joinGroup);
 router.delete("/:groupId/leave", checkAuth, leaveGroup);
 router.delete("/:groupId/remove", checkAuth, deleteGroup);
+
+router.patch("/:groupId/accept_invitation", checkAuth, acceptGroupInvitation);
+router.delete("/:groupId/reject_invitation", checkAuth, rejectGroupInvitation);
 
 module.exports = router;
