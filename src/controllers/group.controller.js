@@ -456,13 +456,15 @@ const deleteGroup = async (req, res, next) => {
       },
       select: {
         id: true,
-        adminId,
+        adminId:true,
       },
     });
 
     if (!group) {
       return next({ status: 404, message: "Group not found" });
     }
+
+    console.log(group)
 
     const isGroupAdmin = group.adminId === currentUser.id;
     if (!isGroupAdmin) {
