@@ -49,6 +49,27 @@ const fetchMyCreatedGroupPosts = async (req, res, next) => {
           id: currentUser.id,
         },
       },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        author: {
+          select: {
+            id: true,
+            firstName: true,
+            profileImage: true,
+          },
+        },
+        image: true,
+        group: {
+          select: {
+            id: true,
+            name: true,
+            profileImage: true,
+            privacy:true,
+          },
+        },
+      },
     });
 
     return res.status(200).json({
@@ -56,6 +77,49 @@ const fetchMyCreatedGroupPosts = async (req, res, next) => {
       message: "fetch create group posts",
       data: {
         posts,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const fetchGroups = async (req, res, next) => {
+  try {
+    const currentUser = res.locals.user;
+    const groups = await db.group.findMany({
+      where: {
+        OR: [
+          {
+            admin: {
+              id: currentUser.id,
+            },
+          },
+          {
+            members: {
+              some: {
+                id: currentUser.id,
+              },
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        name: true,
+        profileImage: true,
+        _count: {
+          select: {
+            members: true,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json({
+      type: "success",
+      message: "Fetch my created groups",
+      data: {
+        groups,
       },
     });
   } catch (error) {
@@ -155,6 +219,7 @@ const fetchGroupsFeed = async (req, res, next) => {
             id: true,
             name: true,
             profileImage: true,
+            privacy:true
           },
         },
       },
@@ -274,7 +339,7 @@ const createGroupPost = async (req, res, next) => {
 
     return res.status(200).json({
       type: "success",
-      message: "Group post created. Will publish when approve from group admin",
+      message: "Group post created successfully.",
       data: {
         post,
       },
@@ -456,7 +521,7 @@ const deleteGroup = async (req, res, next) => {
       },
       select: {
         id: true,
-        adminId:true,
+        adminId: true,
       },
     });
 
@@ -464,7 +529,7 @@ const deleteGroup = async (req, res, next) => {
       return next({ status: 404, message: "Group not found" });
     }
 
-    console.log(group)
+    console.log(group);
 
     const isGroupAdmin = group.adminId === currentUser.id;
     if (!isGroupAdmin) {
@@ -488,7 +553,7 @@ const deleteGroup = async (req, res, next) => {
     next(error);
   }
 };
-const acceptGroupInvitation = async (req,res,next) => {
+const acceptGroupInvitation = async (req, res, next) => {
   try {
     const currentUser = res.locals.user;
     const groupId = req.params.groupId;
@@ -580,7 +645,7 @@ const acceptGroupInvitation = async (req,res,next) => {
     next(error);
   }
 };
-const rejectGroupInvitation = async (req,res,next) => {
+const rejectGroupInvitation = async (req, res, next) => {
   try {
     const currentUser = res.locals.user;
     const groupId = req.params.groupId;
@@ -677,6 +742,7 @@ module.exports = {
   fetchGroupSuggestions,
   createGroup,
   createGroupPost,
+  fetchGroups,
   fetchMyCreatedGroups,
   fetchGroupsInvited,
   fetchMyCreatedGroupPosts,
@@ -690,5 +756,5 @@ module.exports = {
   deleteGroup,
 
   acceptGroupInvitation,
-  rejectGroupInvitation
+  rejectGroupInvitation,
 };

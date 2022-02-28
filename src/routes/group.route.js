@@ -16,14 +16,17 @@ const {
   deleteGroup,
   acceptGroupInvitation,
   rejectGroupInvitation,
+  fetchGroups
 } = require("../controllers/group.controller");
 
 const router = Router();
 
 router.post("/", checkAuth, createGroup);
+router.get("/", checkAuth, fetchGroups);
+router.get("/my_created_groups", checkAuth, fetchMyCreatedGroups);
 router.post("/create_post", checkAuth, createGroupPost);
-router.get("/", checkAuth, fetchMyCreatedGroups);
-router.get("/my_posts", checkAuth, fetchMyCreatedGroupPosts);
+
+router.get("/my_created_posts", checkAuth, fetchMyCreatedGroupPosts);
 router.get("/suggestions", checkAuth, fetchGroupSuggestions);
 router.get("/invited", checkAuth, fetchGroupsInvited);
 router.get("/joined", checkAuth, fetchGroupsJoined);
