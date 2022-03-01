@@ -12,7 +12,7 @@ const {
 
 router.patch("/upload_profile_pic", checkAuth, uploadProfilePic);
 router.get("/:userId", fetchUserDetails);
-router.get("/:userId/friends", fetchFriends);
-router.get("/:userId/posts", fetchUserPosts);
+router.get("/:userId/all_friends", checkAuth, fetchFriends);
+router.get("/:userId/posts", checkAuth, fetchUserPosts);
 
 module.exports = router;

@@ -69,6 +69,8 @@ exports.fetchUserDetails = async (req, res, next) => {
 
 exports.fetchFriends = async (req, res, next) => {
   try {
+    const currentUser = res.locals.user;
+
     const user = await db.user.findUnique({
       where: {
         id: req.params.userId,
@@ -79,6 +81,11 @@ exports.fetchFriends = async (req, res, next) => {
             id: true,
             firstName: true,
             profileImage: true,
+            _count: {
+              select: {
+                myFriends: true,
+              },
+            },
           },
         },
       },
@@ -106,7 +113,7 @@ exports.fetchUserPosts = async (req, res, next) => {
         author: {
           select: {
             firstName: true,
-            coverImage: true,
+            profileImage: true,
           },
         },
       },

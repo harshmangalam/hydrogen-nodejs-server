@@ -7,7 +7,7 @@ exports.fetchPosts = async (req, res, next) => {
         author: {
           select: {
             firstName: true,
-            coverImage: true
+            profileImage: true
           },
         },
       },
