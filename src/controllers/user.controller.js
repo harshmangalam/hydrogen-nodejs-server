@@ -66,3 +66,60 @@ exports.fetchUserDetails = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.fetchFriends = async (req, res, next) => {
+  try {
+    const user = await db.user.findUnique({
+      where: {
+        id: req.params.userId,
+      },
+      select: {
+        myFriends: {
+          select: {
+            id: true,
+            firstName: true,
+            profileImage: true,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json({
+      type: "success",
+      message: "Fetch user friends",
+      data: {
+        users: user.myFriends,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.fetchUserPosts = async (req, res, next) => {
+  try {
+    const posts = await db.post.findMany({
+      where: {
+        authorId: req.params.userId,
+      },
+      include: {
+        author: {
+          select: {
+            firstName: true,
+            coverImage: true,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json({
+      type: "success",
+      message: "Fetch user posts",
+      data: {
+        posts,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
