@@ -2,6 +2,26 @@ const { db } = require("../utils/db");
 
 // fetch friends suggestion
 
+const select = {
+  id: true,
+  firstName: true,
+  lastName: true,
+  profileImage: true,
+  myFriends: {
+    take: 3,
+    select: {
+      id: true,
+      profileImage: true,
+      firstName: true,
+    },
+  },
+  _count: {
+    select: {
+      myFriends: true,
+    },
+  },
+};
+
 const fetchFriendsSuggestion = async (req, res, next) => {
   const currentUser = res.locals.user;
 
@@ -19,14 +39,23 @@ const fetchFriendsSuggestion = async (req, res, next) => {
           {
             id: currentUser.id,
           },
+          {
+            friendsRequestsSent: {
+              some: {
+                id: currentUser.id,
+              },
+            },
+          },
+          {
+            myFriends: {
+              some: {
+                id: currentUser.id,
+              },
+            },
+          },
         ],
       },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        profileImage: true,
-      },
+      select,
     });
 
     return res.status(200).json({
@@ -53,15 +82,7 @@ const fetchFriends = async (req, res, next) => {
       },
       select: {
         myFriends: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-
-            profileImage: true,
-            status: true,
-            lastSeen: true,
-          },
+          select,
         },
       },
     });
@@ -89,12 +110,7 @@ const fetchFriendsRequestsSent = async (req, res, next) => {
       },
       select: {
         friendsRequestsSent: {
-          select: {
-            id: true,
-            firstName: true,
-            profileImage: true,
-            lastName: true,
-          },
+          select
         },
       },
     });
@@ -123,12 +139,7 @@ const fetchFriendsRequestsReceived = async (req, res, next) => {
       },
       select: {
         friendsRequestsReceived: {
-          select: {
-            id: true,
-            firstName: true,
-            profileImage: true,
-            lastName: true,
-          },
+          select
         },
       },
     });
