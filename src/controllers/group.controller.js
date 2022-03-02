@@ -1,4 +1,5 @@
 const { db } = require("../utils/db");
+const { generateRandomImage } = require("../utils/generateImage");
 
 const fetchGroupSuggestions = async (req, res, next) => {
   try {
@@ -216,9 +217,7 @@ const fetchGroupsFeed = async (req, res, next) => {
               },
             },
           },
-          {
-
-          }
+          {},
         ],
       },
       select: {
@@ -242,9 +241,9 @@ const fetchGroupsFeed = async (req, res, next) => {
           },
         },
       },
-      orderBy:{
-        updatedAt:"desc"
-      }
+      orderBy: {
+        updatedAt: "desc",
+      },
     });
     return res.status(200).json({
       type: "success",
@@ -302,12 +301,16 @@ const createGroup = async (req, res, next) => {
       invitedPeople = [],
     } = req.body;
 
-    console.log(privacy);
     const group = await db.group.create({
       data: {
         name,
-        coverImage,
-        profileImage,
+        coverImage: coverImage
+          ? coverImage
+          : generateRandomImage({ str: name, size: 400 }),
+        profileImage: profileImage
+          ? profileImage
+          : generateRandomImage({ str: name, size: 400 }),
+
         privacy,
         admin: {
           connect: {

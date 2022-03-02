@@ -4,6 +4,7 @@ const { checkPassword, hashPassword } = require("../utils/password.util");
 const { createJwtToken } = require("../utils/token.util");
 
 const { db } = require("../utils/db");
+const { generateRandomImage } = require("../utils/generateImage");
 // ------------------------- login ------------------------------
 
 exports.login = async (req, res, next) => {
@@ -81,7 +82,7 @@ exports.signup = async (req, res, next) => {
       data: errors.mapped(),
     });
   }
-  let { email, password, firstName, lastName,gender } = req.body;
+  let { email, password, firstName, lastName, gender } = req.body;
   try {
     // check duplicate email
     const emailExist = await db.user.findUnique({
@@ -109,7 +110,13 @@ exports.signup = async (req, res, next) => {
         lastName,
         email,
         password,
-        gender
+        gender,
+        profileImage: generateRandomImage({ str: email }),
+        coverImage: generateRandomImage({
+          size: 400,
+          str: email,
+          type: "blank",
+        }),
       },
     });
 
