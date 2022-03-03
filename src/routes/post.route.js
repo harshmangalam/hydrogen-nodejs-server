@@ -10,14 +10,18 @@ const {
   fetchTrendingPosts,
   fetchFeedPosts,
   fetchFriendsPosts,
+  addRemoveLike
 } = require("../controllers/post.controller");
 
+router.post("/", checkAuth, createPost);
 router.get("/", fetchPosts);
 router.get("/trending", fetchTrendingPosts);
 router.get("/feed", checkAuth, fetchFeedPosts);
 router.get("/friends", checkAuth, fetchFriendsPosts);
 router.get("/:postId", fetchPost);
-router.post("/", checkAuth, createPost);
 router.delete("/:postId", checkAuth, deletePost);
+
+
+router.patch("/:postId/add_remove_like",checkAuth,addRemoveLike)
 
 module.exports = router;
