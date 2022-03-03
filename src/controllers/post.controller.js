@@ -1,16 +1,48 @@
 const { db } = require("../utils/db");
 
-const author = {
-  select: {
-    id: true,
-    firstName: true,
-    profileImage: true,
-  },
-};
+async function _hasLikePost(userId, postId) {
+  const likes = await db.user.count({
+    where: {
+      AND: [
+        {
+          id: userId,
+        },
+        {
+          likePosts: {
+            some: {
+              id: postId,
+            },
+          },
+        },
+      ],
+    },
+  });
 
-const _count = {
-  select: {
-    likes: true,
+  return likes ? true : false;
+}
+
+const include = {
+  author: {
+    select: {
+      id: true,
+      firstName: true,
+      profileImage: true,
+    },
+  },
+  _count: {
+    select: {
+      likes:true,
+      taggedFriends: true,
+    },
+  },
+
+  taggedFriends: {
+    take: 3,
+    select: {
+      id: true,
+      firstName: true,
+      profileImage: true,
+    },
   },
 };
 
@@ -150,6 +182,7 @@ exports.deletePost = async (req, res, next) => {
 
 exports.fetchTrendingPosts = async (req, res, next) => {
   try {
+    const currentUser = res.locals.user;
     const posts = await db.post.findMany({
       orderBy: [
         {
@@ -162,15 +195,20 @@ exports.fetchTrendingPosts = async (req, res, next) => {
         },
       ],
 
-      include: {
-        author,
-      },
+      include,
     });
+
+    const postsData = [];
+
+    for await (const post of posts) {
+      post.hasLike = await _hasLikePost(currentUser.id, post.id);
+      postsData.push(post);
+    }
 
     return res.status(200).json({
       type: "success",
       message: "fetch trending posts",
-      data: { posts },
+      data: { posts: postsData },
     });
   } catch (error) {
     next(error);
@@ -202,18 +240,20 @@ exports.fetchFeedPosts = async (req, res, next) => {
       orderBy: {
         updatedAt: "desc",
       },
-      include: {
-        author,
-        _count,
-      },
+      include
     });
 
-    
+    const postsData = [];
+
+    for await (const post of posts) {
+      post.hasLike = await _hasLikePost(currentUser.id, post.id);
+      postsData.push(post);
+    }
 
     return res.status(200).json({
       type: "success",
       message: "fetch feed posts",
-      data: { posts },
+      data: { posts: postsData },
     });
   } catch (error) {
     next(error);
@@ -236,15 +276,20 @@ exports.fetchFriendsPosts = async (req, res, next) => {
       orderBy: {
         createdAt: "desc",
       },
-      include: {
-        author,
-      },
+      include,
     });
+
+    const postsData = [];
+
+    for await (const post of posts) {
+      post.hasLike = await _hasLikePost(currentUser.id, post.id);
+      postsData.push(post);
+    }
 
     return res.status(200).json({
       type: "success",
       message: "fetch feed posts",
-      data: { posts },
+      data: { posts: postsData },
     });
   } catch (error) {
     next(error);
