@@ -27,6 +27,31 @@ exports.uploadProfilePic = async (req, res, next) => {
   }
 };
 
+const postInclude = {
+  author: {
+    select: {
+      id: true,
+      firstName: true,
+      profileImage: true,
+    },
+  },
+  _count: {
+    select: {
+      likes: true,
+      taggedFriends: true,
+    },
+  },
+
+  taggedFriends: {
+    take: 3,
+    select: {
+      id: true,
+      firstName: true,
+      profileImage: true,
+    },
+  },
+};
+
 exports.fetchUserDetails = async (req, res, next) => {
   try {
     const user = await db.user.findUnique({
@@ -45,7 +70,7 @@ exports.fetchUserDetails = async (req, res, next) => {
           },
         },
         myFriends: {
-          take: 5,
+          take: 3,
           select: {
             id: true,
             firstName: true,
@@ -109,14 +134,7 @@ exports.fetchUserPosts = async (req, res, next) => {
       where: {
         authorId: req.params.userId,
       },
-      include: {
-        author: {
-          select: {
-            firstName: true,
-            profileImage: true,
-          },
-        },
-      },
+      include: postInclude,
     });
 
     return res.status(200).json({

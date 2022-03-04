@@ -7,6 +7,7 @@ const select = {
   firstName: true,
   lastName: true,
   profileImage: true,
+  status:true,
   myFriends: {
     take: 3,
     select: {

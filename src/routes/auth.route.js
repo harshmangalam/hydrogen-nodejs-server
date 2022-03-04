@@ -30,6 +30,6 @@ const signupValidation = [
 router.post("/signup", signupValidation, signup);
 router.post("/login", loginValidation, login);
 router.get("/me", checkAuth, fetchCurrentUser);
-router.get("/logout", checkAuth, logout);
+router.patch("/logout", checkAuth, logout);
 
 module.exports = router;
