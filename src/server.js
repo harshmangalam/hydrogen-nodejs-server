@@ -13,6 +13,7 @@ const postRoutes = require("./routes/post.route");
 const friendsRoutes = require("./routes/friends.route");
 const groupsRoutes = require("./routes/group.route");
 const userRoutes = require("./routes/user.route");
+const notificationRoute = require("./routes/notification.route");
 
 // middlewares
 
@@ -54,6 +55,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/friends", friendsRoutes);
 app.use("/api/groups", groupsRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/notifications", notificationRoute);
 
 // page not found error handling  middleware
 

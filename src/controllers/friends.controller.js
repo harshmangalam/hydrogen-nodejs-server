@@ -7,7 +7,7 @@ const select = {
   firstName: true,
   lastName: true,
   profileImage: true,
-  status:true,
+  status: true,
   myFriends: {
     take: 3,
     select: {
@@ -111,7 +111,7 @@ const fetchFriendsRequestsSent = async (req, res, next) => {
       },
       select: {
         friendsRequestsSent: {
-          select
+          select,
         },
       },
     });
@@ -140,7 +140,7 @@ const fetchFriendsRequestsReceived = async (req, res, next) => {
       },
       select: {
         friendsRequestsReceived: {
-          select
+          select,
         },
       },
     });
@@ -204,6 +204,15 @@ const sendFriendRequest = async (req, res, next) => {
             lastName: true,
           },
         },
+      },
+    });
+
+    await db.notifications.create({
+      data: {
+        type: "FRIEND",
+        fromUserId: currentUser.id,
+        toUserId: userId,
+        content:"has sent you friend request"
       },
     });
 
@@ -326,6 +335,15 @@ const acceptFriendRequest = async (req, res, next) => {
       },
     });
 
+    await db.notifications.create({
+      data: {
+        type: "FRIEND",
+        fromUserId: currentUser.id,
+        toUserId: userId,
+        content:"has accepted your friend request"
+      },
+    });
+
     return res.status(200).json({
       type: "success",
       message: "Both of you are now friends",
@@ -409,6 +427,15 @@ const removeFromFriendslist = async (req, res, next) => {
       },
     });
 
+    await db.notifications.create({
+      data: {
+        type: "FRIEND",
+        fromUserId: currentUser.id,
+        toUserId: userId,
+        content:"has unfriend you"
+      },
+    });
+
     return res.status(200).json({
       type: "success",
       message: "Both of you are not friends from now",
@@ -480,6 +507,15 @@ const cancelSentRequest = async (req, res, next) => {
             id: currentUser.id,
           },
         },
+      },
+    });
+
+    await db.notifications.create({
+      data: {
+        type: "FRIEND",
+        fromUserId: currentUser.id,
+        toUserId: userId,
+        content:"has cancelled your friend request"
       },
     });
 
@@ -558,6 +594,15 @@ const ignoreReceivedRequest = async (req, res, next) => {
             id: currentUser.id,
           },
         },
+      },
+    });
+
+    await db.notifications.create({
+      data: {
+        type: "FRIEND",
+        fromUserId: currentUser.id,
+        toUserId: userId,
+        content:"has ignore your friend request"
       },
     });
 

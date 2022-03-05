@@ -11,33 +11,35 @@ datasource db {
 }
 
 model User {
-  id                      String      @id @default(uuid())
+  id                      String          @id @default(uuid())
   firstName               String
   lastName                String?
-  email                   String      @unique
+  email                   String          @unique
   password                String
-  gender                  UserGender  @default(MALE)
+  gender                  UserGender      @default(MALE)
   coverImage              String?
   profileImage            String?
-  role                    UserRole    @default(USER)
-  status                  UserStatus  @default(ACTIVE)
-  lastSeen                DateTime    @default(now())
-  isEmailVerified         Boolean     @default(false)
-  createdAt               DateTime    @default(now())
-  updatedAt               DateTime    @updatedAt
-  friendsOf               User[]      @relation("_UsersFriends", references: [id])
-  myFriends               User[]      @relation("_UsersFriends", references: [id])
-  friendsRequestsSent     User[]      @relation("_FriendsRequests", references: [id])
-  friendsRequestsReceived User[]      @relation("_FriendsRequests", references: [id])
-  taggedInPosts           Post[]      @relation("_UsersPostsTag")
-  specificAudienceInPosts Post[]      @relation("_UsersPostsSpecificAudience")
+  role                    UserRole        @default(USER)
+  status                  UserStatus      @default(ACTIVE)
+  lastSeen                DateTime        @default(now())
+  isEmailVerified         Boolean         @default(false)
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @updatedAt
+  friendsOf               User[]          @relation("_UsersFriends", references: [id])
+  myFriends               User[]          @relation("_UsersFriends", references: [id])
+  friendsRequestsSent     User[]          @relation("_FriendsRequests", references: [id])
+  friendsRequestsReceived User[]          @relation("_FriendsRequests", references: [id])
+  taggedInPosts           Post[]          @relation("_UsersPostsTag")
+  specificAudienceInPosts Post[]          @relation("_UsersPostsSpecificAudience")
   posts                   Post[]
-  likePosts               Post[]      @relation("_UsersPostsLike")
-  membersInGroups         Group[]     @relation("_GroupMembers")
+  likePosts               Post[]          @relation("_UsersPostsLike")
+  membersInGroups         Group[]         @relation("_GroupMembers")
   groupsCreated           Group[]
-  groupPosts              GroupPost[] @relation("_GroupPostsCreated")
-  groupPostLikes          GroupPost[] @relation("_UsersGroupPostsLikes")
-  invitedInGroups         Group[]     @relation("_UsersGroupsInvite")
+  groupPosts              GroupPost[]     @relation("_GroupPostsCreated")
+  groupPostLikes          GroupPost[]     @relation("_UsersGroupPostsLikes")
+  invitedInGroups         Group[]         @relation("_UsersGroupsInvite")
+  fromNotifications       Notifications[] @relation("fromNotifications")
+  toNotifications         Notifications[] @relation("toNotifications")
 
 }
 
@@ -72,6 +74,7 @@ model Group {
   posts         GroupPost[]
   invitedPeople User[]       @relation("_UsersGroupsInvite")
 
+
 }
 
 model GroupPost {
@@ -80,12 +83,23 @@ model GroupPost {
   author      User     @relation(name: "_GroupPostsCreated", fields: [authorId], references: [id])
   authorId    String
   image       String?
-  likes       User[]   @relation("_UsersGroupPostsLikes")
+  likes       User[]   @relation("_UsersGroupPostsLikes", references: [id])
   isPublished Boolean  @default(false)
   group       Group    @relation(fields: [groupId], references: [id])
   groupId     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Notifications {
+  id         String           @id @default(uuid())
+  type       NotificationType
+  content    String
+  createdAt  DateTime         @default(now())
+  fromUser   User?            @relation(name: "fromNotifications", fields: [fromUserId], references: [id])
+  fromUserId String?
+  toUser     User?            @relation(name: "toNotifications", fields: [toUserId], references: [id])
+  toUserId   String?
 }
 
 enum PostAudienceEnum {
@@ -115,4 +129,11 @@ enum UserStatus {
 enum GroupPrivacy {
   PUBLIC
   PRIVATE
+}
+
+enum NotificationType {
+  POST
+  FRIEND
+  GROUP
+
 }
