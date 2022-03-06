@@ -35,3 +35,22 @@ exports.fetchNotifications = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.clearNotifications = async (req, res, next) => {
+  try {
+    const currentUser = res.locals.user;
+    await db.notifications.deleteMany({
+      where: {
+        toUserId: currentUser.id,
+      },
+    });
+
+    return res.status(200).json({
+      type: "success",
+      message: "Clear all notifications",
+      data: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
