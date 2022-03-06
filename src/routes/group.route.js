@@ -16,8 +16,8 @@ const {
   deleteGroup,
   acceptGroupInvitation,
   rejectGroupInvitation,
-  fetchGroups
-} = require("../controllers/group.controller");
+  fetchGroups,
+} = require("../controllers/group");
 
 const router = Router();
 

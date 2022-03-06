@@ -61,11 +61,10 @@ exports.ignoreReceivedRequest = async (req, res, next) => {
     });
 
     const notification = await createNotification({
-      data: {
-        fromUserId: currentUser.id,
-        toUserId: userId,
-        content: "has ignore your friend request",
-      },
+      fromUserId: currentUser.id,
+      toUserId: userId,
+      content: "has ignore your friend request",
+      
     });
     const count = await countNotifications(toUser.id);
 

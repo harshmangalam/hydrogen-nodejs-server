@@ -1,15 +1,15 @@
-const { acceptFriendRequest } = require("./acceptFriendRequest.controller");
-const { sendFriendRequest } = require("./sendFriendRequest.controller");
-const { removeFromFriendslist } = require("./removeFriend.controller");
-const { cancelSentRequest } = require("./cancelSentRequest.controller");
-const { ignoreReceivedRequest } = require("./ignoreRequest.controller");
+const { acceptFriendRequest } = require("./acceptFriendRequest");
+const { sendFriendRequest } = require("./sendFriendRequest");
+const { removeFromFriendslist } = require("./removeFromFriendList");
+const { cancelSentRequest } = require("./cancelSentRequest");
+const { ignoreReceivedRequest } = require("./ignoreReceivedRequest");
 
 const {
   fetchFriends,
   fetchFriendsRequestsReceived,
   fetchFriendsRequestsSent,
   fetchFriendsSuggestion,
-} = require("./fetchFriends.controller");
+} = require("./fetchFriends");
 
 module.exports = {
   acceptFriendRequest,
