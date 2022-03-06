@@ -2,7 +2,7 @@
   "name": "hydrogen-api",
   "version": "0.0.1",
   "description": "A Social media backend api powered by nodejs and prisma",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js"
@@ -35,7 +35,8 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "socket.io": "^4.4.1"
   },
   "devDependencies": {
     "morgan": "^1.10.0",

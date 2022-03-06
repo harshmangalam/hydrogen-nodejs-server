@@ -1,21 +1,28 @@
+require("dotenv").config();
+const { createServer } = require("http");
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-require("dotenv").config();
+const { registerRoutes } = require("./routes");
+const { ORIGIN, NODE_ENV, PORT } = require("./config/env.config");
+const { createSocketIOInstance } = require("./socket");
 
-const { PORT, ORIGIN, NODE_ENV } = require("./config/env.config");
+const {
+  globalErrorHandler,
+  notFoundErrorHandler,
+} = require("./middlewares/error.middleware");
+
 const app = express();
-const http = require("http").createServer(app);
 
-// import all routes
-const authRoutes = require("./routes/auth.route");
-const postRoutes = require("./routes/post.route");
-const friendsRoutes = require("./routes/friends.route");
-const groupsRoutes = require("./routes/group.route");
-const userRoutes = require("./routes/user.route");
-const notificationRoute = require("./routes/notification.route");
+const httpServer = createServer(app);
 
-// middlewares
+const io = createSocketIOInstance(httpServer);
+// logging in development environment
+
+if (NODE_ENV === "dev") {
+  const morgan = require("morgan");
+  app.use(morgan("dev"));
+}
 
 // parse incomming request into json
 app.use(express.json());
@@ -29,18 +36,13 @@ app.use(
   })
 );
 
-// parse incomming cookies in request
-app.use(cookieParser());
+app.use(cookieParser()); // parse incomming cookies in request
 
-// logging in development environment
-
-if (NODE_ENV === "dev") {
-  const morgan = require("morgan");
-  app.use(morgan("dev"));
-}
-
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
 // server health check
-
 app.get("/", (req, res) => {
   res.status(200).json({
     type: "success",
@@ -49,44 +51,8 @@ app.get("/", (req, res) => {
   });
 });
 
-// routes middleware
-app.use("/api/auth", authRoutes);
-app.use("/api/posts", postRoutes);
-app.use("/api/friends", friendsRoutes);
-app.use("/api/groups", groupsRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/notifications", notificationRoute);
+registerRoutes(app); // register routes
+app.use("*", notFoundErrorHandler); // api route not found error handling
+app.use(globalErrorHandler); //global error handler
 
-// page not found error handling  middleware
-
-app.use("*", (req, res, next) => {
-  const error = {
-    status: 404,
-    message: "API endpoint does not exists",
-  };
-  next(error);
-});
-
-// global error handling middleware
-app.use((err, req, res, next) => {
-  console.log(err);
-  const status = err.status || 500;
-  const message = err.message || "Something went wrong";
-  const data = err.data || null;
-  res.status(status).json({
-    type: "error",
-    message,
-    data,
-  });
-});
-
-function main() {
-  try {
-    http.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
-  } catch (error) {
-    console.log(error);
-    process.exit(1);
-  }
-}
-
-main();
+httpServer.listen(PORT, () => console.log(`listening on port ${PORT}`));

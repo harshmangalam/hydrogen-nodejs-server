@@ -7,9 +7,10 @@ const {
   removeFromFriendslist,
   fetchFriendsSuggestion,
   fetchFriends,
+
   cancelSentRequest,
   ignoreReceivedRequest,
-} = require("../controllers/friends.controller");
+} = require("../controllers/friend");
 const checkAuth = require("../middlewares/auth.middleware");
 
 const router = Router();
