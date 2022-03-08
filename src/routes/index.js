@@ -4,6 +4,7 @@ const friendsRoutes = require("./friends.route");
 const groupsRoutes = require("./group.route");
 const userRoutes = require("./user.route");
 const notificationRoute = require("./notification.route");
+const messengerRoute = require("./messenger.route");
 
 exports.registerRoutes = (app) => {
   app.use("/api/auth", authRoutes);
@@ -12,4 +13,5 @@ exports.registerRoutes = (app) => {
   app.use("/api/groups", groupsRoutes);
   app.use("/api/users", userRoutes);
   app.use("/api/notifications", notificationRoute);
+  app.use("/api/messenger", messengerRoute);
 };

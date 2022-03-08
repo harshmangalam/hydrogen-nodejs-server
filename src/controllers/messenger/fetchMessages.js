@@ -3,6 +3,17 @@ exports.fetchMessages = async (req, res, next) => {
   try {
     const friendId = req.params.friendId;
     const currentUserId = res.locals.user.id;
+
+    const friend = await db.user.findUnique({
+      where: { id: friendId },
+      select: {
+        id: true,
+        firstName: true,
+        profileImage: true,
+        status: true,
+        lastSeen: true,
+      },
+    });
     const messages = await db.message.findMany({
       where: {
         OR: [
@@ -51,6 +62,7 @@ exports.fetchMessages = async (req, res, next) => {
       message: "Fetch messages between two user",
       data: {
         messages,
+        friend,
       },
     });
   } catch (error) {
