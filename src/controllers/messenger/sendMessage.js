@@ -18,6 +18,8 @@ exports.sendMessage = async (req, res, next) => {
             id: true,
             firstName: true,
             profileImage: true,
+            status: true,
+            lastSeen: true,
           },
         },
         sender: {
@@ -25,6 +27,8 @@ exports.sendMessage = async (req, res, next) => {
             id: true,
             firstName: true,
             profileImage: true,
+            status: true,
+            lastSeen: true,
           },
         },
       },
