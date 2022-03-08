@@ -106,7 +106,7 @@ model Notifications {
 
 model Message {
   id         String        @id @default(uuid())
-  message    String
+  content    String
   createdAt  DateTime      @default(now())
   sender     User?         @relation(name: "_MessagesSent", fields: [senderId], references: [id])
   senderId   String?
