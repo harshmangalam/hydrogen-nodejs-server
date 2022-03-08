@@ -41,7 +41,8 @@ model User {
   fromNotifications       Notifications[] @relation("fromNotifications")
   toNotifications         Notifications[] @relation("toNotifications")
   socketId                String?
-
+  messagesSent            Message[]       @relation("_MessagesSent")
+  messagesReceived        Message[]       @relation("_MessagesReceived")
 }
 
 model Post {
@@ -103,6 +104,17 @@ model Notifications {
   toUserId   String?
 }
 
+model Message {
+  id         String        @id @default(uuid())
+  message    String
+  createdAt  DateTime      @default(now())
+  sender     User?         @relation(name: "_MessagesSent", fields: [senderId], references: [id])
+  senderId   String?
+  receiver   User?         @relation(name: "_MessagesReceived", fields: [receiverId], references: [id])
+  receiverId String?
+  status     MessageStatus @default(SENT)
+}
+
 enum PostAudienceEnum {
   PUBLIC
   FRIENDS
@@ -137,4 +149,10 @@ enum NotificationType {
   FRIEND
   GROUP
 
+}
+
+enum MessageStatus {
+  SENT
+  RECEIVED
+  SEEN
 }
