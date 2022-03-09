@@ -1,6 +1,7 @@
 const { ORIGIN } = require("../config/env.config");
 const { Server } = require("socket.io");
 const { db } = require("../utils/db");
+const chatHandler = require("./chatHandler");
 exports.createSocketIOInstance = (httpServer) => {
   const io = new Server(httpServer, {
     cors: {
@@ -27,7 +28,7 @@ exports.createSocketIOInstance = (httpServer) => {
   });
 
   const handleConnection = (socket) => {
-    // friendHandler(io, socket);
+    chatHandler(io, socket);
   };
   io.on("connection", handleConnection);
 

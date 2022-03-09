@@ -45,6 +45,7 @@ exports.fetchMessages = async (req, res, next) => {
             id: true,
             firstName: true,
             profileImage: true,
+            socketId:true,
           },
         },
         sender: {
@@ -52,6 +53,8 @@ exports.fetchMessages = async (req, res, next) => {
             id: true,
             firstName: true,
             profileImage: true,
+            socketId:true,
+
           },
         },
       },

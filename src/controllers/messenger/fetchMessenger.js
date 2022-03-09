@@ -13,6 +13,7 @@ exports.fetchMessenger = async (req, res, next) => {
             firstName: true,
             profileImage: true,
             lastSeen: true,
+            socketId:true,
             status: true,
             messagesReceived: {
               where: {

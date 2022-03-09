@@ -1,13 +1,22 @@
 const { db } = require("../../utils/db");
 exports.sendMessage = async (req, res, next) => {
   try {
-    const currentUserId = res.locals.user.id;
+    const currentUser = res.locals.user;
     const friendId = req.params.friendId;
     const { content } = req.body;
 
+    const friend = await db.user.findUnique({
+      where: {
+        id: friendId,
+      },
+      select: {
+        id: true,
+        socketId: true,
+      },
+    });
     const message = await db.message.create({
       data: {
-        senderId: currentUserId,
+        senderId: currentUser.id,
         receiverId: friendId,
         content,
         status: "SENT",
@@ -20,6 +29,7 @@ exports.sendMessage = async (req, res, next) => {
             profileImage: true,
             status: true,
             lastSeen: true,
+            socketId:true
           },
         },
         sender: {
@@ -29,14 +39,17 @@ exports.sendMessage = async (req, res, next) => {
             profileImage: true,
             status: true,
             lastSeen: true,
+            socketId:true,
           },
         },
       },
     });
 
-    return res.status(200).json({
+    req.io.to(friend.socketId).emit("chat:message-received", message);
+ 
+    res.status(200).json({
       type: "success",
-      message: "Fetch friends with last messages",
+      message: "Message sent successfully",
       data: {
         message,
       },
