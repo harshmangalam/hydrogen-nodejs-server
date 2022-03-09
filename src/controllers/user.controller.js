@@ -63,6 +63,8 @@ exports.fetchUserDetails = async (req, res, next) => {
         coverImage: true,
         firstName: true,
         lastName: true,
+        status: true,
+        lastSeen: true,
         profileImage: true,
         _count: {
           select: {
@@ -106,6 +108,8 @@ exports.fetchFriends = async (req, res, next) => {
             id: true,
             firstName: true,
             profileImage: true,
+            status:true,
+            lastSeen:true,
             _count: {
               select: {
                 myFriends: true,

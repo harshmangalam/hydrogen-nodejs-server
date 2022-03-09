@@ -12,6 +12,8 @@ exports.fetchMessenger = async (req, res, next) => {
             id: true,
             firstName: true,
             profileImage: true,
+            lastSeen: true,
+            status: true,
             messagesReceived: {
               where: {
                 senderId: currentUserId,
