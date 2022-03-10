@@ -12,6 +12,7 @@ exports.fetchMessages = async (req, res, next) => {
         profileImage: true,
         status: true,
         lastSeen: true,
+        socketId: true,
       },
     });
     const messages = await db.message.findMany({
@@ -45,7 +46,7 @@ exports.fetchMessages = async (req, res, next) => {
             id: true,
             firstName: true,
             profileImage: true,
-            socketId:true,
+            socketId: true,
           },
         },
         sender: {
@@ -53,8 +54,7 @@ exports.fetchMessages = async (req, res, next) => {
             id: true,
             firstName: true,
             profileImage: true,
-            socketId:true,
-
+            socketId: true,
           },
         },
       },
