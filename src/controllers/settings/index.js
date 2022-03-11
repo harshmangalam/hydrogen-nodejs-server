@@ -1,9 +1,6 @@
-const {
-  fetchAccountLoggedin,
-  removeAccountLoggedin,
-} = require("./accountLoggedin");
+const { fetchLoginHistory, removeLoginHistory } = require("./loginHistory");
 
 module.exports = {
-  fetchAccountLoggedin,
-  removeAccountLoggedin,
+  fetchLoginHistory,
+  removeLoginHistory,
 };

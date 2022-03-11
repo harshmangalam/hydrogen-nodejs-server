@@ -3,15 +3,16 @@ exports.fetchCurrentUser = async (req, res, next) => {
   try {
     // get data already store in response local objects
     const currentUserId = res.locals.user.id;
+    const token = req.cookies.token;
     const currentUser = await db.user.findUnique({
       where: {
         id: currentUserId,
       },
     });
 
-    const accountLoggedin = await db.accountLoggedin.findFirst({
+    const currentAccount = await db.loginHistory.findFirst({
       where: {
-        AND: [{ userId: currentUserId }, { isCurrent: true }],
+        token,
       },
     });
 
@@ -21,7 +22,7 @@ exports.fetchCurrentUser = async (req, res, next) => {
       message: "Fetch current user",
       data: {
         user: currentUser,
-        accountLoggedin,
+        currentAccount,
       },
     });
   } catch (error) {

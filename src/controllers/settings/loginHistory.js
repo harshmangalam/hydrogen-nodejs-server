@@ -1,8 +1,8 @@
 const { db } = require("../../utils/db");
-exports.fetchAccountLoggedin = async (req, res, next) => {
+exports.fetchLoginHistory = async (req, res, next) => {
   try {
     const currentUser = res.locals.user;
-    const accountsLoggedin = await db.accountLoggedin.findMany({
+    const loginHistory = await db.loginHistory.findMany({
       where: {
         userId: currentUser.id,
       },
@@ -12,7 +12,7 @@ exports.fetchAccountLoggedin = async (req, res, next) => {
       type: "success",
       message: "fetch account loggedin list",
       data: {
-        accountsLoggedin,
+        loginHistory,
       },
     });
   } catch (error) {
@@ -20,7 +20,7 @@ exports.fetchAccountLoggedin = async (req, res, next) => {
   }
 };
 
-exports.removeAccountLoggedin = async (req, res, next) => {
+exports.removeLoginHistory = async (req, res, next) => {
   try {
     const currentUser = res.locals.user;
     await db.accountLoggedin.deleteMany({
@@ -31,7 +31,7 @@ exports.removeAccountLoggedin = async (req, res, next) => {
 
     return res.status(200).json({
       type: "success",
-      message: "clear account loggedin list",
+      message: "clear account login history",
       data: null,
     });
   } catch (error) {

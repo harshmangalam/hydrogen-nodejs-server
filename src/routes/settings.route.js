@@ -1,9 +1,12 @@
-const {Router} = require('express')
-const { fetchAccountLoggedin,removeAccountLoggedin } = require('../controllers/settings')
-const checkAuth= require("../middlewares/auth.middleware")
-const router = Router()
+const { Router } = require("express");
+const {
+  fetchLoginHistory,
+  removeLoginHistory,
+} = require("../controllers/settings");
+const checkAuth = require("../middlewares/auth.middleware");
+const router = Router();
 
-router.get("/accounts_loggedin",checkAuth,fetchAccountLoggedin)
-router.delete("/accounts_loggedin",checkAuth,removeAccountLoggedin)
+router.get("/accounts_loggedin", checkAuth, fetchLoginHistory);
+router.delete("/accounts_loggedin", checkAuth, removeLoginHistory);
 
-module.exports = router
+module.exports = router;

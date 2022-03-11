@@ -47,7 +47,7 @@ exports.login = async (req, res, next) => {
 
     const { name, version, layout, description, ua, os } = platform;
 
-    await db.accountLoggedin.updateMany({
+    await db.loginHistory.updateMany({
       where: {
         userId: user.id,
       },
@@ -55,7 +55,7 @@ exports.login = async (req, res, next) => {
         isCurrent: false,
       },
     });
-    const activeAccountLoggedin = await db.accountLoggedin.create({
+    const currentAccount = await db.loginHistory.create({
       data: {
         browser: {
           name,
@@ -91,7 +91,7 @@ exports.login = async (req, res, next) => {
       data: {
         user,
         token,
-        activeAccountLoggedin,
+        currentAccount,
       },
     });
   } catch (error) {

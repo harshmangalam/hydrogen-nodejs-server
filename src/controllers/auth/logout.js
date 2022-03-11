@@ -6,7 +6,7 @@ exports.logout = async (req, res, next) => {
     const userId = res.locals.user.id;
     // expire cookies from user frontend
 
-    const { accountId } = req.params;
+    const { accountId } = req.query;
 
     await db.user.update({
       where: {
@@ -18,15 +18,18 @@ exports.logout = async (req, res, next) => {
       },
     });
 
-    await db.accountLoggedin.update({
-      where: {
-        id: accountId,
-      },
-      data: {
-        isActive: false,
-        lastSeen: new Date().toISOString(),
-      },
-    });
+    if (accountId) {
+      console.log(accountId)
+      await db.loginHistory.update({
+        where: {
+          id: accountId,
+        },
+        data: {
+          isActive: false,
+          lastSeen: new Date().toISOString(),
+        },
+      });
+    }
 
     res.set(
       "Set-Cookie",
