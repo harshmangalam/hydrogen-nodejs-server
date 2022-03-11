@@ -11,38 +11,53 @@ datasource db {
 }
 
 model User {
-  id                      String          @id @default(uuid())
+  id                      String            @id @default(uuid())
   firstName               String
   lastName                String?
-  email                   String          @unique
+  email                   String            @unique
   password                String
-  gender                  UserGender      @default(MALE)
+  gender                  UserGender        @default(MALE)
   coverImage              String?
   profileImage            String?
-  role                    UserRole        @default(USER)
-  status                  UserStatus      @default(ACTIVE)
-  lastSeen                DateTime        @default(now())
-  isEmailVerified         Boolean         @default(false)
-  createdAt               DateTime        @default(now())
-  updatedAt               DateTime        @updatedAt
-  friendsOf               User[]          @relation("_UsersFriends", references: [id])
-  myFriends               User[]          @relation("_UsersFriends", references: [id])
-  friendsRequestsSent     User[]          @relation("_FriendsRequests", references: [id])
-  friendsRequestsReceived User[]          @relation("_FriendsRequests", references: [id])
-  taggedInPosts           Post[]          @relation("_UsersPostsTag")
-  specificAudienceInPosts Post[]          @relation("_UsersPostsSpecificAudience")
+  role                    UserRole          @default(USER)
+  status                  UserStatus        @default(ACTIVE)
+  lastSeen                DateTime          @default(now())
+  isEmailVerified         Boolean           @default(false)
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+  friendsOf               User[]            @relation("_UsersFriends", references: [id])
+  myFriends               User[]            @relation("_UsersFriends", references: [id])
+  friendsRequestsSent     User[]            @relation("_FriendsRequests", references: [id])
+  friendsRequestsReceived User[]            @relation("_FriendsRequests", references: [id])
+  taggedInPosts           Post[]            @relation("_UsersPostsTag")
+  specificAudienceInPosts Post[]            @relation("_UsersPostsSpecificAudience")
   posts                   Post[]
-  likePosts               Post[]          @relation("_UsersPostsLike")
-  membersInGroups         Group[]         @relation("_GroupMembers")
+  likePosts               Post[]            @relation("_UsersPostsLike")
+  membersInGroups         Group[]           @relation("_GroupMembers")
   groupsCreated           Group[]
-  groupPosts              GroupPost[]     @relation("_GroupPostsCreated")
-  groupPostLikes          GroupPost[]     @relation("_UsersGroupPostsLikes")
-  invitedInGroups         Group[]         @relation("_UsersGroupsInvite")
-  fromNotifications       Notifications[] @relation("fromNotifications")
-  toNotifications         Notifications[] @relation("toNotifications")
+  groupPosts              GroupPost[]       @relation("_GroupPostsCreated")
+  groupPostLikes          GroupPost[]       @relation("_UsersGroupPostsLikes")
+  invitedInGroups         Group[]           @relation("_UsersGroupsInvite")
+  fromNotifications       Notifications[]   @relation("fromNotifications")
+  toNotifications         Notifications[]   @relation("toNotifications")
   socketId                String?
-  messagesSent            Message[]       @relation("_MessagesSent")
-  messagesReceived        Message[]       @relation("_MessagesReceived")
+  messagesSent            Message[]         @relation("_MessagesSent")
+  messagesReceived        Message[]         @relation("_MessagesReceived")
+  accountLoggedin         AccountLoggedin[] @relation("_UserAccountLoggedin")
+}
+
+model AccountLoggedin {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  browser   Json?
+  os        Json?
+  location  Json?
+  lastSeen  DateTime @default(now())
+  isActive  Boolean  @default(true)
+  isCurrent Boolean  @default(true)
+  user      User     @relation("_UserAccountLoggedin", fields: [userId], references: [id])
+  userId    String
+  token     String?
 }
 
 model Post {

@@ -9,7 +9,7 @@ const {
   login,
   fetchCurrentUser,
   logout,
-} = require("../controllers/auth.controller");
+} = require("../controllers/auth");
 
 const loginValidation = [
   body("email").not().isEmpty().withMessage("Email must be required"),
@@ -30,6 +30,6 @@ const signupValidation = [
 router.post("/signup", signupValidation, signup);
 router.post("/login", loginValidation, login);
 router.get("/me", checkAuth, fetchCurrentUser);
-router.patch("/logout", checkAuth, logout);
+router.patch("/logout/:accountId", checkAuth, logout);
 
 module.exports = router;

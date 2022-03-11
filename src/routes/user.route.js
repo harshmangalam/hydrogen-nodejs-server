@@ -15,4 +15,5 @@ router.get("/:userId", fetchUserDetails);
 router.get("/:userId/all_friends", checkAuth, fetchFriends);
 router.get("/:userId/posts", checkAuth, fetchUserPosts);
 
+
 module.exports = router;
