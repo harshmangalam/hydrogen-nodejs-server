@@ -6,7 +6,7 @@ const {
 const checkAuth = require("../middlewares/auth.middleware");
 const router = Router();
 
-router.get("/accounts_loggedin", checkAuth, fetchLoginHistory);
-router.delete("/accounts_loggedin", checkAuth, removeLoginHistory);
+router.get("/login_history", checkAuth, fetchLoginHistory);
+router.delete("/login_history", checkAuth, removeLoginHistory);
 
 module.exports = router;

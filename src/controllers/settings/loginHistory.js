@@ -23,11 +23,22 @@ exports.fetchLoginHistory = async (req, res, next) => {
 exports.removeLoginHistory = async (req, res, next) => {
   try {
     const currentUser = res.locals.user;
-    await db.accountLoggedin.deleteMany({
+    const data = await db.loginHistory.deleteMany({
       where: {
-        userId: currentUser.id,
+        AND: [
+          {
+            userId: currentUser.id,
+          },
+          {
+            isCurrent: false,
+          },
+        ],
       },
     });
+
+    if(!data?.count){
+      return next({status:404,message:"Already cleared"})
+    }
 
     return res.status(200).json({
       type: "success",
