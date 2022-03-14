@@ -11,7 +11,7 @@ const {
   fetchFeedPosts,
   fetchFriendsPosts,
   addRemoveLike,
-} = require("../controllers/post.controller");
+} = require("../controllers/post");
 
 router.post("/", checkAuth, createPost);
 router.get("/", fetchPosts);
