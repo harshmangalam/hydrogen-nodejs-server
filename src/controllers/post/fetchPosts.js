@@ -1,5 +1,5 @@
 const { db } = require("../../utils/db");
-const {} = require("./_helper");
+
 exports.fetchPosts = async (req, res, next) => {
   try {
     const posts = await db.post.findMany({

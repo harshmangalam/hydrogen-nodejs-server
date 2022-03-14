@@ -1,3 +1,5 @@
+const { db } = require("../../utils/db");
+
 exports.hasLikePost = async (userId, postId) => {
   const likes = await db.user.count({
     where: {
