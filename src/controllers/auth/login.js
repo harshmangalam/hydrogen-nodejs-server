@@ -14,7 +14,7 @@ exports.login = async (req, res, next) => {
     });
   }
   const { email, password, platform, coords } = req.body;
-  console.log(platform);
+
   try {
     // verify email
     const user = await db.user.findUnique({
@@ -76,7 +76,7 @@ exports.login = async (req, res, next) => {
       },
     });
 
-    await db.user.update({
+    const currentUser = await db.user.update({
       where: {
         id: user.id,
       },
@@ -85,11 +85,13 @@ exports.login = async (req, res, next) => {
       },
     });
 
+    delete currentUser.password;
+
     res.status(201).json({
       type: "success",
       message: "You have loggedin successfully",
       data: {
-        user,
+        user: currentUser,
         token,
         currentAccount,
       },
