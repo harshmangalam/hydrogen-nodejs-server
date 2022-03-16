@@ -1,5 +1,5 @@
 const { db } = require("../../utils/db");
-const { include } = require("./_helper");
+const { include, hasLikePost } = require("./_helper");
 exports.fetchTrendingPosts = async (req, res, next) => {
   try {
     const currentUser = res.locals.user;
@@ -21,7 +21,7 @@ exports.fetchTrendingPosts = async (req, res, next) => {
     const postsData = [];
 
     for await (const post of posts) {
-      post.hasLike = await _hasLikePost(currentUser.id, post.id);
+      post.hasLike = await hasLikePost(currentUser.id, post.id);
       postsData.push(post);
     }
 
