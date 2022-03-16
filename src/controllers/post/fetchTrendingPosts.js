@@ -6,12 +6,12 @@ exports.fetchTrendingPosts = async (req, res, next) => {
     const posts = await db.post.findMany({
       orderBy: [
         {
-          createdAt: "desc",
-        },
-        {
           likes: {
             _count: "desc",
           },
+        },
+        {
+          createdAt: "desc",
         },
       ],
 
