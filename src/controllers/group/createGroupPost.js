@@ -1,5 +1,8 @@
 const { db } = require("../../utils/db");
-const { createNotification } = require("./_helper");
+const {
+  createNotification,
+  countNotifications,
+} = require("../../utils/notification");
 
 exports.createGroupPost = async (req, res, next) => {
   try {
@@ -39,7 +42,12 @@ exports.createGroupPost = async (req, res, next) => {
         members: {
           select: {
             id: true,
-
+            socketId: true,
+          },
+        },
+        admin: {
+          select: {
+            id: true,
             socketId: true,
           },
         },
@@ -47,14 +55,25 @@ exports.createGroupPost = async (req, res, next) => {
     });
 
     for await (const user of group.members) {
-      const payload = await createNotification({
+      const notification = await createNotification({
         content: `has created a group post in group ${group.name}`,
         fromUserId: currentUser.id,
         toUserId: user.id,
+        type: "POST",
       });
+      const count = await countNotifications(user.id);
 
-      req.io.to(user.socketId).emit("notification", payload);
+      req.io.to(user.socketId).emit("notification", { notification, count });
     }
+    const notification = await createNotification({
+      content: `has created a group post in group ${group.name}`,
+      fromUserId: currentUser.id,
+      toUserId: group.admin.id,
+      type: "POST",
+    });
+    const count = await countNotifications(group.admin.id);
+
+    req.io.to(group.admin.socketId).emit("notification", { notification, count });
   } catch (error) {
     next(error);
   }
