@@ -21,6 +21,22 @@ exports.fetchGroupNotifications = async (req, res, next) => {
           },
         ],
       },
+      include: {
+        fromUser: {
+          select: {
+            id: true,
+            profileImage: true,
+            firstName: true,
+          },
+        },
+        toUser: {
+          select: {
+            id: true,
+            profileImage: true,
+            firstName: true,
+          },
+        },
+      },
     });
 
     return res.status(200).json({

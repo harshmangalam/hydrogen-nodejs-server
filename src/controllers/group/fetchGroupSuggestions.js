@@ -5,18 +5,25 @@ exports.fetchGroupSuggestions = async (req, res, next) => {
     const currentUser = res.locals.user;
     const groups = await db.group.findMany({
       where: {
-        NOT: {
-          OR: [
-            { adminId: currentUser.id },
-            {
-              members: {
-                some: {
-                  id: currentUser.id,
+        AND: [
+          {
+            NOT: {
+              OR: [
+                { adminId: currentUser.id },
+                {
+                  members: {
+                    some: {
+                      id: currentUser.id,
+                    },
+                  },
                 },
-              },
+              ],
             },
-          ],
-        },
+          },
+          {
+            privacy: "PUBLIC",
+          },
+        ],
       },
       select: {
         id: true,

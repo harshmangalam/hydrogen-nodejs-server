@@ -1,5 +1,8 @@
 const { db } = require("../../utils/db");
-const { createNotification } = require("./_helper");
+const {
+  createNotification,
+  countNotifications,
+} = require("../../utils/notification");
 
 exports.deleteGroup = async (req, res, next) => {
   try {
@@ -28,12 +31,6 @@ exports.deleteGroup = async (req, res, next) => {
       });
     }
 
-    res.status(201).json({
-      type: "success",
-      message: "Group deleted successfully",
-      data: null,
-    });
-
     const groupData = await db.group.findUnique({
       where: {
         id: groupId,
@@ -43,7 +40,6 @@ exports.deleteGroup = async (req, res, next) => {
         members: {
           select: {
             id: true,
-
             socketId: true,
           },
         },
@@ -51,18 +47,27 @@ exports.deleteGroup = async (req, res, next) => {
     });
 
     for await (const user of groupData.members) {
-      const payload = await createNotification({
-        content: `has deleted a group ${groupData.name}`,
+      const notification = await createNotification({
+        content: `has deleted ${groupData.name} group`,
         fromUserId: currentUser.id,
         toUserId: user.id,
+        type: "GROUP",
       });
+      const count = await countNotifications(user.id);
 
-      req.io.to(user.socketId).emit("notification", payload);
+      req.io.to(user.socketId).emit("notification", { notification, count });
     }
+
     await db.group.delete({
       where: {
         id: groupId,
       },
+    });
+
+    res.status(201).json({
+      type: "success",
+      message: "Group deleted successfully",
+      data: null,
     });
   } catch (error) {
     next(error);

@@ -4,7 +4,7 @@ const {
   countNotifications,
 } = require("../../utils/notification");
 const { generateRandomImage } = require("../../utils/generateImage");
-const { fetchFriendsSocket } = require("../../utils/user");
+const { fetchFriendsSocket, fetchUserSocket } = require("../../utils/user");
 exports.createGroup = async (req, res, next) => {
   try {
     const currentUser = res.locals.user;
@@ -54,16 +54,42 @@ exports.createGroup = async (req, res, next) => {
     });
 
     // send notification to all friend that user created a group
-    const user = await fetchFriendsSocket(currentUser.id);
+    if (privacy === "PUBLIC") {
+      console.log("public");
+      const user = await fetchFriendsSocket(currentUser.id);
 
-    for await (const friend of user.myFriends) {
-      const notification = await createNotification({
-        content: `has created a group ${group.name}`,
-        fromUserId: currentUser.id,
-        toUserId: friend.id,
-      });
-      const count = await countNotifications(friend.id);
-      req.io.to(friend.socketId).emit("notification", { notification, count });
+      for await (const friend of user.myFriends) {
+        const notification = await createNotification({
+          content: `has created a public group ${group.name}`,
+          fromUserId: currentUser.id,
+          toUserId: friend.id,
+          type: "GROUP",
+        });
+        const count = await countNotifications(friend.id);
+        req.io
+          .to(friend.socketId)
+          .emit("notification", { notification, count });
+      }
+    }
+
+    if (privacy === "PRIVATE") {
+      {
+        console.log("private");
+
+        for await (const userId of invitedPeople) {
+          const friend = await fetchUserSocket(userId);
+          const notification = await createNotification({
+            content: `has created a private group ${group.name}`,
+            fromUserId: currentUser.id,
+            toUserId: friend.id,
+            type: "GROUP",
+          });
+          const count = await countNotifications(friend.id);
+          req.io
+            .to(friend.socketId)
+            .emit("notification", { notification, count });
+        }
+      }
     }
   } catch (error) {
     next(error);

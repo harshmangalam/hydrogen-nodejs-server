@@ -15,3 +15,15 @@ exports.fetchFriendsSocket = async (userId) => {
     },
   });
 };
+
+exports.fetchUserSocket = async (userId) => {
+  return await db.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      id: true,
+      socketId: true,
+    },
+  });
+};

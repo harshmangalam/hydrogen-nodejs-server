@@ -1,3 +1,9 @@
+const { db } = require("../../utils/db");
+const {
+  createNotification,
+  countNotifications,
+} = require("../../utils/notification");
+
 exports.rejectGroupInvitation = async (req, res, next) => {
   try {
     const currentUser = res.locals.user;
@@ -23,8 +29,6 @@ exports.rejectGroupInvitation = async (req, res, next) => {
         id: true,
       },
     });
-
-    console.log(isInvited);
 
     if (!isInvited) {
       return next({
@@ -54,8 +58,6 @@ exports.rejectGroupInvitation = async (req, res, next) => {
       },
     });
 
-    console.log(isMember);
-
     if (isMember) {
       return next({
         status: 400,
@@ -63,7 +65,7 @@ exports.rejectGroupInvitation = async (req, res, next) => {
       });
     }
 
-    await db.group.update({
+    const group = await db.group.update({
       where: {
         id: groupId,
       },
@@ -79,13 +81,35 @@ exports.rejectGroupInvitation = async (req, res, next) => {
           },
         },
       },
+      select: {
+        id: true,
+        name: true,
+        admin: {
+          select: {
+            id: true,
+            socketId: true,
+          },
+        },
+      },
     });
 
-    return res.status(201).json({
+    res.status(201).json({
       type: "success",
       message: "You have rejected group invitation",
       data: null,
     });
+
+    const notification = await createNotification({
+      content: `has rejected ${group.name} group invitation`,
+      fromUserId: currentUser.id,
+      toUserId: group.admin.id,
+      type: "GROUP",
+    });
+
+    const count = await countNotifications(group.admin.id);
+    req.io
+      .to(group.admin.socketId)
+      .emit("notification", { notification, count });
   } catch (error) {
     next(error);
   }

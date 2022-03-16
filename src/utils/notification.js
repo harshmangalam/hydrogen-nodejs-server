@@ -1,11 +1,6 @@
 const { db } = require("./db");
 
-exports.createNotification = async ({
-  fromUserId,
-  toUserId,
-  content,
-  type,
-}) => {
+const createNotification = async ({ fromUserId, toUserId, content, type }) => {
   const notification = await db.notifications.create({
     data: {
       type: type,
@@ -27,7 +22,7 @@ exports.createNotification = async ({
   return notification;
 };
 
-exports.countNotifications = async (toUserId) => {
+const countNotifications = async (toUserId) => {
   const count = await db.notifications.count({
     where: {
       toUserId,
@@ -35,4 +30,10 @@ exports.countNotifications = async (toUserId) => {
   });
 
   return count;
+};
+
+module.exports = {
+  createNotification,
+
+  countNotifications,
 };
