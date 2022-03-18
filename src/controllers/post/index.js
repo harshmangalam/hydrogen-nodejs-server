@@ -3,7 +3,7 @@ const { createPost } = require("./createPost");
 const { deletePost } = require("./deletePost");
 const { fetchFeedPosts } = require("./fetchFeedPosts");
 const { fetchFriendsPosts } = require("./fetchFriendPosts");
-const { fetchPost } = require("./fetchPost");
+const { fetchPostDetails } = require("./fetchPostDetails");
 const { fetchPosts } = require("./fetchPosts");
 const { fetchTrendingPosts } = require("./fetchTrendingPosts");
 
@@ -13,7 +13,7 @@ module.exports = {
   deletePost,
   fetchFeedPosts,
   fetchFriendsPosts,
-  fetchPost,
+  fetchPostDetails,
   fetchPosts,
   fetchTrendingPosts,
 };
