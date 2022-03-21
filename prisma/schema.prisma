@@ -44,6 +44,7 @@ model User {
   messagesSent            Message[]       @relation("_MessagesSent")
   messagesReceived        Message[]       @relation("_MessagesReceived")
   loginHistory            LoginHistory[]  @relation("UserLoginHistory")
+  postComments            Comment[]
 }
 
 model LoginHistory {
@@ -74,6 +75,7 @@ model Post {
   likes                   User[]           @relation("_UsersPostsLike")
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
+  comments                Comment[]
 
 }
 
@@ -128,6 +130,17 @@ model Message {
   receiver   User?         @relation(name: "_MessagesReceived", fields: [receiverId], references: [id])
   receiverId String?
   status     MessageStatus @default(SENT)
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  content   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
+
 }
 
 enum PostAudienceEnum {

@@ -25,6 +25,7 @@ exports.fetchPostDetails = async (req, res, next) => {
           select: {
             likes: true,
             taggedFriends: true,
+            comments:true
           },
         },
 

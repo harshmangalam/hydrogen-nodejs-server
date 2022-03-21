@@ -33,6 +33,7 @@ exports.include = {
     select: {
       likes: true,
       taggedFriends: true,
+      comments:true
     },
   },
 

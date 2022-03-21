@@ -7,6 +7,7 @@ const notificationRoutes = require("./notification.route");
 const messengerRoutes = require("./messenger.route");
 const settingRoutes = require("./settings.route");
 const searchRoutes = require("./search.route");
+const commentsRoute = require("./comment.route");
 
 exports.registerRoutes = (app) => {
   app.use("/api/auth", authRoutes);
@@ -18,4 +19,5 @@ exports.registerRoutes = (app) => {
   app.use("/api/messenger", messengerRoutes);
   app.use("/api/settings", settingRoutes);
   app.use("/api/search", searchRoutes);
+  app.use("/api/comments", commentsRoute);
 };
