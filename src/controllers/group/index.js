@@ -16,6 +16,8 @@ const { leaveGroup } = require("./leaveGroup");
 const { rejectGroupInvitation } = require("./rejectGroupInvitation");
 const { addRemoveGroupPostLike } = require("./addRemoveGroupPostLike");
 const { removeGroupPost } = require("./removeGroupPost");
+const { fetchGroupPosts } = require("./fetchGroupPosts");
+const { fetchGroupMembers } = require("./fetchGroupMembers");
 
 module.exports = {
   fetchGroupSuggestions,
@@ -38,5 +40,8 @@ module.exports = {
   rejectGroupInvitation,
 
   addRemoveGroupPostLike,
-  removeGroupPost
+  removeGroupPost,
+
+  fetchGroupPosts,
+  fetchGroupMembers,
 };
