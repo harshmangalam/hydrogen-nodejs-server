@@ -10,7 +10,8 @@ const {
   fetchFeedPosts,
   fetchFriendsPosts,
   addRemoveLike,
-  fetchPostDetails
+  fetchPostDetails,
+  fetchPostLikesUser
 } = require("../controllers/post");
 
 router.post("/", checkAuth, createPost);
@@ -19,6 +20,7 @@ router.get("/trending", checkAuth, fetchTrendingPosts);
 router.get("/feed", checkAuth, fetchFeedPosts);
 router.get("/friends", checkAuth, fetchFriendsPosts);
 router.get("/:postId", fetchPostDetails);
+router.get("/:postId/likes", fetchPostLikesUser);
 
 router.delete("/:postId", checkAuth, deletePost);
 
