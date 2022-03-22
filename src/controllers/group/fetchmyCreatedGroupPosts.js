@@ -1,45 +1,33 @@
 const { db } = require("../../utils/db");
+const { includeGroupPost, hasLikePost } = require("./_helper");
 
 exports.fetchMyCreatedGroupPosts = async (req, res, next) => {
-    try {
-      const currentUser = res.locals.user;
-      const posts = await db.groupPost.findMany({
-        where: {
-          author: {
-            id: currentUser.id,
-          },
+  try {
+    const currentUser = res.locals.user;
+    const posts = await db.groupPost.findMany({
+      where: {
+        author: {
+          id: currentUser.id,
         },
-        select: {
-          id: true,
-          content: true,
-          createdAt: true,
-          author: {
-            select: {
-              id: true,
-              firstName: true,
-              profileImage: true,
-            },
-          },
-          image: true,
-          group: {
-            select: {
-              id: true,
-              name: true,
-              profileImage: true,
-              privacy: true,
-            },
-          },
-        },
-      });
-  
-      return res.status(200).json({
-        type: "success",
-        message: "fetch create group posts",
-        data: {
-          posts,
-        },
-      });
-    } catch (error) {
-      next(error);
+      },
+      include: includeGroupPost,
+    });
+
+    const postsData = [];
+
+    for await (const post of posts) {
+      post.hasLike = await hasLikePost(currentUser.id, post.id);
+      postsData.push(post);
     }
-  };
+
+    return res.status(200).json({
+      type: "success",
+      message: "fetch create group posts",
+      data: {
+        posts: postsData,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};

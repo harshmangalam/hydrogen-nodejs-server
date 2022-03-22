@@ -1,4 +1,5 @@
 const { db } = require("../../utils/db");
+const { includeGroupPost, hasLikePost } = require("./_helper");
 
 exports.fetchGroupsFeed = async (req, res, next) => {
   try {
@@ -18,39 +19,26 @@ exports.fetchGroupsFeed = async (req, res, next) => {
               },
             },
           },
-          {},
         ],
       },
-      select: {
-        id: true,
-        content: true,
-        createdAt: true,
-        author: {
-          select: {
-            id: true,
-            firstName: true,
-            profileImage: true,
-          },
-        },
-        image: true,
-        group: {
-          select: {
-            id: true,
-            name: true,
-            profileImage: true,
-            privacy: true,
-          },
-        },
-      },
+      include: includeGroupPost,
       orderBy: {
         updatedAt: "desc",
       },
     });
+
+    const postsData = [];
+
+    for await (const post of posts) {
+      post.hasLike = await hasLikePost(currentUser.id, post.id);
+      postsData.push(post);
+    }
+
     return res.status(200).json({
       type: "success",
       message: "Fetch group feed ",
       data: {
-        posts,
+        posts: postsData,
       },
     });
   } catch (error) {

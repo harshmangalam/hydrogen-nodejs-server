@@ -17,6 +17,8 @@ const {
   acceptGroupInvitation,
   rejectGroupInvitation,
   fetchGroups,
+  addRemoveGroupPostLike,
+  removeGroupPost
 } = require("../controllers/group");
 
 const router = Router();
@@ -33,6 +35,8 @@ router.get("/joined", checkAuth, fetchGroupsJoined);
 router.get("/notifications", checkAuth, fetchGroupNotifications);
 router.get("/feed", checkAuth, fetchGroupsFeed);
 
+router.patch("/:groupId/:postId/addRemoveLike", checkAuth, addRemoveGroupPostLike);
+router.delete("/:groupId/:postId", checkAuth, removeGroupPost);
 router.get("/:groupId", checkAuth, fetchGroupDetails);
 router.patch("/:groupId/join", checkAuth, joinGroup);
 router.delete("/:groupId/leave", checkAuth, leaveGroup);
