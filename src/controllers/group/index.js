@@ -19,6 +19,7 @@ const { removeGroupPost } = require("./removeGroupPost");
 const { fetchGroupPosts } = require("./fetchGroupPosts");
 const { fetchGroupMembers } = require("./fetchGroupMembers");
 const { uploadGroupPic } = require("./uploadGroupPic");
+const { updateGroupDetails } = require("./updateGroupDetails");
 
 module.exports = {
   fetchGroupSuggestions,
@@ -45,5 +46,6 @@ module.exports = {
 
   fetchGroupPosts,
   fetchGroupMembers,
-  uploadGroupPic
+  uploadGroupPic,
+  updateGroupDetails,
 };
