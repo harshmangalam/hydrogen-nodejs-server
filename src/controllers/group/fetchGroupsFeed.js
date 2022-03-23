@@ -19,6 +19,11 @@ exports.fetchGroupsFeed = async (req, res, next) => {
               },
             },
           },
+          {
+            group: {
+              adminId: currentUser.id,
+            },
+          },
         ],
       },
       include: includeGroupPost,

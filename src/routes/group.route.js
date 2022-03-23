@@ -21,6 +21,7 @@ const {
   removeGroupPost,
   fetchGroupPosts,
   fetchGroupMembers,
+  uploadGroupPic,
 } = require("../controllers/group");
 
 const router = Router();
@@ -52,5 +53,6 @@ router.patch("/:groupId/accept_invitation", checkAuth, acceptGroupInvitation);
 router.get("/:groupId/posts", checkAuth, fetchGroupPosts);
 router.get("/:groupId/members", checkAuth, fetchGroupMembers);
 router.delete("/:groupId/reject_invitation", checkAuth, rejectGroupInvitation);
+router.patch("/:groupId/upload", checkAuth, uploadGroupPic);
 
 module.exports = router;
