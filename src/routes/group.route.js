@@ -39,12 +39,6 @@ router.get("/joined", checkAuth, fetchGroupsJoined);
 router.get("/notifications", checkAuth, fetchGroupNotifications);
 router.get("/feed", checkAuth, fetchGroupsFeed);
 
-router.patch(
-  "/:groupId/:postId/addRemoveLike",
-  checkAuth,
-  addRemoveGroupPostLike
-);
-router.delete("/:groupId/:postId", checkAuth, removeGroupPost);
 router.get("/:groupId", checkAuth, fetchGroupDetails);
 router.patch("/:groupId/join", checkAuth, joinGroup);
 router.delete("/:groupId/leave", checkAuth, leaveGroup);
@@ -56,5 +50,14 @@ router.get("/:groupId/members", checkAuth, fetchGroupMembers);
 router.delete("/:groupId/reject_invitation", checkAuth, rejectGroupInvitation);
 router.patch("/:groupId/upload", checkAuth, uploadGroupPic);
 router.patch("/:groupId/details", checkAuth, updateGroupDetails);
+
+router.patch(
+  "/:groupId/:postId/addRemoveLike",
+  checkAuth,
+  addRemoveGroupPostLike
+);
+router.delete("/:groupId/:postId", checkAuth, removeGroupPost);
+
+
 
 module.exports = router;
