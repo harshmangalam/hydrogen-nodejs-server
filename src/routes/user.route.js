@@ -8,10 +8,12 @@ const {
   fetchUserDetails,
   fetchFriends,
   fetchUserPosts,
-  changePassword
+  changePassword,
+  updateUserDetails
 } = require("../controllers/user");
 
 router.patch("/upload_profile_pic", checkAuth, uploadProfilePic);
+router.patch("/details", checkAuth, updateUserDetails);
 router.patch("/change_password", checkAuth, changePassword);
 router.get("/:userId", fetchUserDetails);
 router.get("/:userId/all_friends", checkAuth, fetchFriends);

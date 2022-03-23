@@ -3,6 +3,7 @@ const { fetchUserPosts } = require("./fetchUserPosts");
 const { fetchUserDetails } = require("./fetchUserDetails");
 const { fetchFriends } = require("./fetchFriends");
 const { changePassword } = require("./changePassword");
+const { updateUserDetails } = require("./updateUserDetails");
 
 module.exports = {
   uploadProfilePic,
@@ -10,4 +11,5 @@ module.exports = {
   fetchUserDetails,
   fetchUserPosts,
   changePassword,
+  updateUserDetails,
 };
