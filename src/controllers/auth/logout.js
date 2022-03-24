@@ -35,7 +35,7 @@ exports.logout = async (req, res, next) => {
       "Set-Cookie",
       cookie.serialize("token", "", {
         httpOnly: true,
-        sameSite: "none",
+        sameSite: NODE_ENV === "production" ? "none" : "strict",
         expires: new Date(0),
         path: "/",
         secure: NODE_ENV === "production" ? true : false,

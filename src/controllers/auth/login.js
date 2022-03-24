@@ -40,7 +40,7 @@ exports.login = async (req, res, next) => {
       "Set-Cookie",
       cookie.serialize("token", token, {
         httpOnly: true,
-        sameSite: "none",
+        sameSite: NODE_ENV === "production" ? "none" : "strict",
         maxAge: 3600 * 12,
         path: "/",
         secure: NODE_ENV === "production" ? true : false,
