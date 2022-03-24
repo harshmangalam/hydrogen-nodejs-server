@@ -59,7 +59,7 @@ exports.createGroupPost = async (req, res, next) => {
         content: `has created a group post in group ${group.name}`,
         fromUserId: currentUser.id,
         toUserId: user.id,
-        type: "POST",
+        type: "GROUP",
       });
       const count = await countNotifications(user.id);
 
@@ -69,7 +69,7 @@ exports.createGroupPost = async (req, res, next) => {
       content: `has created a group post in group ${group.name}`,
       fromUserId: currentUser.id,
       toUserId: group.admin.id,
-      type: "POST",
+      type: "GROUP",
     });
     const count = await countNotifications(group.admin.id);
 

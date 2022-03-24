@@ -56,7 +56,7 @@ model LoginHistory {
   lastSeen  DateTime @default(now())
   isActive  Boolean  @default(true)
   isCurrent Boolean  @default(true)
-  user      User     @relation("UserLoginHistory", fields: [userId], references: [id])
+  user      User     @relation("UserLoginHistory", fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   token     String   @unique
 }
@@ -65,7 +65,7 @@ model Post {
   id                      String           @id @default(uuid())
   content                 String?
   audience                PostAudienceEnum @default(PUBLIC)
-  author                  User             @relation(fields: [authorId], references: [id])
+  author                  User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId                String
   image                   String?
   feeling                 String?
@@ -84,7 +84,7 @@ model Group {
   name          String
   privacy       GroupPrivacy @default(PUBLIC)
   members       User[]       @relation("_GroupMembers")
-  admin         User         @relation(references: [id], fields: [adminId])
+  admin         User         @relation(references: [id], fields: [adminId], onDelete: Cascade)
   adminId       String
   coverImage    String?
   profileImage  String?
@@ -99,7 +99,7 @@ model Group {
 model GroupPost {
   id          String   @id @default(uuid())
   content     String?
-  author      User     @relation(name: "_GroupPostsCreated", fields: [authorId], references: [id])
+  author      User     @relation(name: "_GroupPostsCreated", fields: [authorId], references: [id], onDelete: Cascade)
   authorId    String
   image       String?
   likes       User[]   @relation("_UsersGroupPostsLikes", references: [id])
@@ -115,9 +115,9 @@ model Notifications {
   type       NotificationType
   content    String
   createdAt  DateTime         @default(now())
-  fromUser   User?            @relation(name: "fromNotifications", fields: [fromUserId], references: [id])
+  fromUser   User?            @relation(name: "fromNotifications", fields: [fromUserId], references: [id], onDelete: Cascade)
   fromUserId String?
-  toUser     User?            @relation(name: "toNotifications", fields: [toUserId], references: [id])
+  toUser     User?            @relation(name: "toNotifications", fields: [toUserId], references: [id], onDelete: Cascade)
   toUserId   String?
 }
 
@@ -125,9 +125,9 @@ model Message {
   id         String        @id @default(uuid())
   content    String
   createdAt  DateTime      @default(now())
-  sender     User?         @relation(name: "_MessagesSent", fields: [senderId], references: [id])
+  sender     User?         @relation(name: "_MessagesSent", fields: [senderId], references: [id], onDelete: Cascade)
   senderId   String?
-  receiver   User?         @relation(name: "_MessagesReceived", fields: [receiverId], references: [id])
+  receiver   User?         @relation(name: "_MessagesReceived", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId String?
   status     MessageStatus @default(SENT)
 }
@@ -136,9 +136,9 @@ model Comment {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   content   String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
 
 }
