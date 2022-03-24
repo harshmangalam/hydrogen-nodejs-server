@@ -1,10 +1,10 @@
 const { db } = require("../../utils/db");
 const cookie = require("cookie");
+const { NODE_ENV } = require("../../config/env.config");
 
 exports.logout = async (req, res, next) => {
   try {
     const userId = res.locals.user.id;
-    // expire cookies from user frontend
 
     const { accountId } = req.query;
 
@@ -19,7 +19,7 @@ exports.logout = async (req, res, next) => {
     });
 
     if (accountId) {
-      console.log(accountId)
+      console.log(accountId);
       await db.loginHistory.update({
         where: {
           id: accountId,
@@ -35,9 +35,10 @@ exports.logout = async (req, res, next) => {
       "Set-Cookie",
       cookie.serialize("token", "", {
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "none",
         expires: new Date(0),
         path: "/",
+        secure: NODE_ENV === "production" ? true : false,
       })
     );
 
