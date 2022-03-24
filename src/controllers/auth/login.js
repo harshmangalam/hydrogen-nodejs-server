@@ -3,6 +3,7 @@ const { validationResult } = require("express-validator");
 const { checkPassword } = require("../../utils/password.util");
 const { createJwtToken } = require("../../utils/token.util");
 const cookie = require("cookie");
+const { NODE_ENV } = require("../../config/env.config");
 exports.login = async (req, res, next) => {
   // return api fields validation errors
   const errors = validationResult(req);
@@ -38,9 +39,10 @@ exports.login = async (req, res, next) => {
     res.set(
       "Set-Cookie",
       cookie.serialize("token", token, {
-        sameSite: "strict",
+        sameSite: "lax",
         maxAge: 3600 * 12,
         path: "/",
+        secure: NODE_ENV === "production",
       })
     );
 
