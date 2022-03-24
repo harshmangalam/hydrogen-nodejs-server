@@ -39,11 +39,11 @@ exports.login = async (req, res, next) => {
     res.set(
       "Set-Cookie",
       cookie.serialize("token", token, {
-        httpOnly: false,
-        sameSite: "lax",
+        httpOnly: true,
+        sameSite: "strict",
         maxAge: 3600 * 12,
         path: "/",
-        secure: NODE_ENV === "production",
+        secure: NODE_ENV === "production" ? true : false,
       })
     );
 
