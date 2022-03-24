@@ -33,6 +33,7 @@ app.use(
     credentials: true,
     origin: JSON.parse(ORIGIN),
     optionsSuccessStatus: 200,
+    
   })
 );
 
