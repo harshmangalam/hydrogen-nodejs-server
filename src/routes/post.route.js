@@ -5,17 +5,17 @@ const checkAuth = require("../middlewares/auth.middleware");
 const {
   createPost,
   deletePost,
-  fetchPosts,
   fetchTrendingPosts,
   fetchFeedPosts,
   fetchFriendsPosts,
   addRemoveLike,
   fetchPostDetails,
-  fetchPostLikesUser
+  fetchPostLikesUser,
+  fetchMyPosts,
 } = require("../controllers/post");
 
 router.post("/", checkAuth, createPost);
-router.get("/", fetchPosts);
+router.get("/my_posts", checkAuth, fetchMyPosts);
 router.get("/trending", checkAuth, fetchTrendingPosts);
 router.get("/feed", checkAuth, fetchFeedPosts);
 router.get("/friends", checkAuth, fetchFriendsPosts);

@@ -22,7 +22,9 @@ exports.fetchTrendingPosts = async (req, res, next) => {
 
     for await (const post of posts) {
       post.hasLike = await hasLikePost(currentUser.id, post.id);
-      postsData.push(post);
+      if (post.audience === "PUBLIC") {
+        postsData.push(post);
+      }
     }
 
     return res.status(200).json({

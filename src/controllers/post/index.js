@@ -7,6 +7,7 @@ const { fetchPostDetails } = require("./fetchPostDetails");
 const { fetchPosts } = require("./fetchPosts");
 const { fetchTrendingPosts } = require("./fetchTrendingPosts");
 const { fetchPostLikesUser } = require("./fetchPostLikesUser");
+const { fetchMyPosts } = require("./fetchMyPosts");
 
 module.exports = {
   addRemoveLike,
@@ -17,5 +18,6 @@ module.exports = {
   fetchPostDetails,
   fetchPosts,
   fetchTrendingPosts,
-  fetchPostLikesUser
+  fetchPostLikesUser,
+  fetchMyPosts
 };

@@ -23,7 +23,24 @@ exports.fetchFriendsPosts = async (req, res, next) => {
 
     for await (const post of posts) {
       post.hasLike = await hasLikePost(currentUser.id, post.id);
-      postsData.push(post);
+
+      switch (post.audience) {
+        case "FRIENDS":
+          postsData.push(post);
+          break;
+
+        case "PUBLIC":
+          postsData.push(post);
+          break;
+
+        case "SPECIFIC":
+          post.specificAudienceFriends.forEach((u) => {
+            if (u.id === currentUser.id) {
+              postsData.push(post);
+            }
+          });
+          break;
+      }
     }
 
     return res.status(200).json({

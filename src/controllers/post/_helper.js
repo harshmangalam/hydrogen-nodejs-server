@@ -33,12 +33,19 @@ exports.include = {
     select: {
       likes: true,
       taggedFriends: true,
-      comments:true
+      comments: true,
     },
   },
 
   taggedFriends: {
     take: 3,
+    select: {
+      id: true,
+      firstName: true,
+      profileImage: true,
+    },
+  },
+  specificAudienceFriends: {
     select: {
       id: true,
       firstName: true,
