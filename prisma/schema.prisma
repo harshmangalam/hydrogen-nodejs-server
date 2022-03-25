@@ -104,7 +104,7 @@ model GroupPost {
   image       String?
   likes       User[]   @relation("_UsersGroupPostsLikes", references: [id])
   isPublished Boolean  @default(false)
-  group       Group    @relation(fields: [groupId], references: [id])
+  group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
