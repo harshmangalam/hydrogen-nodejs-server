@@ -1,1 +1,1 @@
-# Hydrogen - Social media web app (Powered by Nodejs)
+# Hydrogen - Social media REST API (Powered by Nodejs)
