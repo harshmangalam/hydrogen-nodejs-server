@@ -8,6 +8,9 @@ exports.fetchMyPosts = async (req, res, next) => {
         authorId: currentUser.id,
       },
       include,
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return res.status(200).json({
