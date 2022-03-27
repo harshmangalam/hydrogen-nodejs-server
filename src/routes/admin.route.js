@@ -12,7 +12,7 @@ const {
 
 const router = Router();
 
-router.post("/users", users);
+router.get("/users", users);
 router.get("/groups", groups);
 router.get("/groupPosts", groupPosts);
 router.get("/comments", comments);
