@@ -31,9 +31,8 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: JSON.parse(ORIGIN),
+    origin: ORIGIN.split(","),
     optionsSuccessStatus: 200,
-    
   })
 );
 
