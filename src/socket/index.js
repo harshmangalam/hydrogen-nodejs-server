@@ -6,7 +6,7 @@ const userHandler = require("./userHandler");
 exports.createSocketIOInstance = (httpServer) => {
   const io = new Server(httpServer, {
     cors: {
-      origin: ORIGIN.split(","),
+      origin: JSON.parse(ORIGIN),
     },
   });
 
