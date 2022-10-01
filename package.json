@@ -29,6 +29,7 @@
   "dependencies": {
     "@prisma/client": "^3.9.2",
     "bcrypt": "^5.0.1",
+    "cloudinary": "^1.32.0",
     "cookie": "^0.4.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
