@@ -9,6 +9,7 @@ const settingRoutes = require("./settings.route");
 const searchRoutes = require("./search.route");
 const commentsRoute = require("./comment.route");
 const adminRoutes = require("./admin.route");
+const cloudinaryRoutes = require("./cloudinary.route")
 
 exports.registerRoutes = (app) => {
   app.use("/api/auth", authRoutes);
@@ -22,4 +23,5 @@ exports.registerRoutes = (app) => {
   app.use("/api/search", searchRoutes);
   app.use("/api/comments", commentsRoute);
   app.use("/api/admin", adminRoutes);
+  app.use("/api/cloudinary", cloudinaryRoutes);
 };
