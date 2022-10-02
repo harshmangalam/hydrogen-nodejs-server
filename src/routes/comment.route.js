@@ -4,7 +4,7 @@ const checkAuth = require("../middlewares/auth.middleware");
 const router = Router();
 
 router.post("/:postId", checkAuth, createComment);
-router.delete("/:commentId", deleteComment);
+router.delete("/:commentId", checkAuth, deleteComment);
 router.get("/:postId", checkAuth, fetchComments);
 
 module.exports = router;
