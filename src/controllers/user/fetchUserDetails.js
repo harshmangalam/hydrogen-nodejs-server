@@ -14,6 +14,7 @@ exports.fetchUserDetails = async (req, res, next) => {
         status: true,
         lastSeen: true,
         profileImage: true,
+        createdAt: true,
         _count: {
           select: {
             myFriends: true,
