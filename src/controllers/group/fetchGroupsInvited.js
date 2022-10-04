@@ -15,6 +15,13 @@ exports.fetchGroupsInvited = async (req, res, next) => {
         id: true,
         name: true,
         profileImage: true,
+        admin: {
+          select: {
+            id: true,
+            profileImage: true,
+            firstName: true,
+          },
+        },
         _count: {
           select: {
             members: true,
