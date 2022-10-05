@@ -13,6 +13,7 @@ exports.fetchGroupDetails = async (req, res, next) => {
         privacy: true,
         coverImage: true,
         profileImage: true,
+        createdAt: true,
         admin: {
           select: {
             id: true,

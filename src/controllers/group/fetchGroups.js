@@ -24,6 +24,7 @@ exports.fetchGroups = async (req, res, next) => {
         id: true,
         name: true,
         profileImage: true,
+        createdAt: true,
         admin: {
           select: {
             id: true,
