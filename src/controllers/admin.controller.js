@@ -1,4 +1,33 @@
 const { db } = require("../utils/db");
+
+exports.overview = async (req, res, next) => {
+  try {
+    const user = await db.user.count();
+    const group = await db.group.count();
+    const groupPost = await db.groupPost.count();
+    const loginHistory = await db.loginHistory.count();
+    const message = await db.message.count();
+    const notification = await db.notifications.count();
+    const post = await db.post.count();
+
+    return res.status(200).json({
+      type: "success",
+      message: "Fetch overview",
+      data: {
+        user,
+        groupPost,
+        group,
+        loginHistory,
+        message,
+        notification,
+        post,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.users = async (req, res, next) => {
   try {
     const users = await db.user.findMany({

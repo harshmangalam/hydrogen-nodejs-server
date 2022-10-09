@@ -8,10 +8,12 @@ const {
   notifications,
   posts,
   users,
+  overview,
 } = require("../controllers/admin.controller");
 
 const router = Router();
 
+router.get("/", overview);
 router.get("/users", users);
 router.get("/groups", groups);
 router.get("/groupPosts", groupPosts);
