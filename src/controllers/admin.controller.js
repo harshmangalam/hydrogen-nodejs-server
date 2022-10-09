@@ -5,11 +5,32 @@ exports.users = async (req, res, next) => {
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        _count: {
+          select: {
+            friendsRequestsReceived: true,
+            friendsRequestsSent: true,
+            friendsOf: true,
+            groupPostLikes: true,
+            groupsCreated: true,
+            groupPosts: true,
+            invitedInGroups: true,
+            likePosts: true,
+            myFriends: true,
+            taggedInPosts: true,
+            loginHistory: true,
+            membersInGroups: true,
+            messagesReceived: true,
+            messagesSent: true,
+            postComments: true,
+            posts: true,
+          },
+        },
+      },
     });
     return res.status(200).json({
       type: "success",
       message: "fetch users",
-
       data: {
         users,
       },
