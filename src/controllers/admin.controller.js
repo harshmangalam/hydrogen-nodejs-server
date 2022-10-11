@@ -75,6 +75,16 @@ exports.loginHistory = async (req, res, next) => {
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            email: true,
+            profileImage: true,
+          },
+        },
+      },
     });
     return res.status(200).json({
       type: "success",
@@ -107,18 +117,24 @@ exports.posts = async (req, res, next) => {
           select: {
             id: true,
             firstName: true,
+            profileImage: true,
+            email: true,
           },
         },
         specificAudienceFriends: {
           select: {
             id: true,
             firstName: true,
+            profileImage: true,
+            email: true,
           },
         },
         taggedFriends: {
           select: {
             id: true,
-            firstName,
+            firstName: true,
+            profileImage: true,
+            email: true,
           },
         },
       },
@@ -153,18 +169,24 @@ exports.groups = async (req, res, next) => {
           select: {
             id: true,
             firstName: true,
+            profileImage: true,
+            email: true,
           },
         },
         invitedPeople: {
           select: {
             id: true,
             firstName: true,
+            profileImage: true,
+            email: true,
           },
         },
         members: {
           select: {
             id: true,
-            firstName,
+            firstName: true,
+            profileImage: true,
+            email: true,
           },
         },
       },
@@ -197,12 +219,16 @@ exports.groupPosts = async (req, res, next) => {
           select: {
             id: true,
             firstName: true,
+            profileImage: true,
+            email: true,
           },
         },
         group: {
           select: {
-            name: true,
             id: true,
+            firstName: true,
+            profileImage: true,
+            email: true,
           },
         },
       },
@@ -225,6 +251,24 @@ exports.notifications = async (req, res, next) => {
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        fromUser: {
+          select: {
+            id: true,
+            firstName: true,
+            profileImage: true,
+            email: true,
+          },
+        },
+        toUser: {
+          select: {
+            id: true,
+            firstName: true,
+            profileImage: true,
+            email: true,
+          },
+        },
+      },
     });
     return res.status(200).json({
       type: "success",
@@ -238,44 +282,22 @@ exports.notifications = async (req, res, next) => {
   }
 };
 
-exports.messages = async (req, res, next) => {
-  try {
-    const messages = await db.message.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-      include: {
-        receiver: {
-          select: {
-            id: true,
-            firstName: true,
-          },
-        },
-        sender: {
-          select: {
-            id: true,
-            firstName: true,
-          },
-        },
-      },
-    });
-    return res.status(200).json({
-      type: "success",
-      message: "fetch messages",
-      data: {
-        messages,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
 exports.comments = async (req, res, next) => {
   try {
     const comments = await db.comment.findMany({
       orderBy: {
         createdAt: "desc",
+      },
+      include: {
+        post: true,
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            profileImage: true,
+            email: true,
+          },
+        },
       },
     });
     return res.status(200).json({

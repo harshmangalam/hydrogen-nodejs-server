@@ -4,7 +4,6 @@ const {
   groupPosts,
   groups,
   loginHistory,
-  messages,
   notifications,
   posts,
   users,
@@ -19,7 +18,6 @@ router.get("/groups", groups);
 router.get("/groupPosts", groupPosts);
 router.get("/comments", comments);
 router.get("/loginHistory", loginHistory);
-router.get("/messages", messages);
 router.get("/posts", posts);
 router.get("/notifications", notifications);
 
