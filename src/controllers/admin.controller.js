@@ -219,16 +219,14 @@ exports.groupPosts = async (req, res, next) => {
           select: {
             id: true,
             firstName: true,
-            profileImage: true,
             email: true,
+            profileImage: true,
           },
         },
         group: {
           select: {
             id: true,
-            firstName: true,
-            profileImage: true,
-            email: true,
+            name: true,
           },
         },
       },
