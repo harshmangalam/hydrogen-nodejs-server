@@ -76,7 +76,6 @@ model Post {
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
   comments                Comment[]
-
 }
 
 model Group {
@@ -92,8 +91,6 @@ model Group {
   updatedAt     DateTime     @updatedAt
   posts         GroupPost[]
   invitedPeople User[]       @relation("_UsersGroupsInvite")
-
-
 }
 
 model GroupPost {
@@ -102,7 +99,7 @@ model GroupPost {
   author      User     @relation(name: "_GroupPostsCreated", fields: [authorId], references: [id], onDelete: Cascade)
   authorId    String
   image       String?
-  likes       User[]   @relation("_UsersGroupPostsLikes", references: [id], onDelete: Cascade)
+  likes       User[]   @relation("_UsersGroupPostsLikes", references: [id])
   isPublished Boolean  @default(false)
   group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId     String
@@ -140,7 +137,6 @@ model Comment {
   userId    String
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
-
 }
 
 enum PostAudienceEnum {
@@ -176,7 +172,6 @@ enum NotificationType {
   POST
   FRIEND
   GROUP
-
 }
 
 enum MessageStatus {
