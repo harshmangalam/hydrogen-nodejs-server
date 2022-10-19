@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/harshmangalam/hydrogen-nodejs-server#readme",
   "dependencies": {
-    "@prisma/client": "^3.9.2",
+    "@prisma/client": "^3.13.0",
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.32.0",
     "cookie": "^0.4.2",
@@ -42,6 +42,6 @@
   "devDependencies": {
     "morgan": "^1.10.0",
     "nodemon": "^2.0.15",
-    "prisma": "^3.9.2"
+    "prisma": "^3.13.0"
   }
 }
