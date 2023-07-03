@@ -25,10 +25,10 @@ model User {
   isEmailVerified         Boolean         @default(false)
   createdAt               DateTime        @default(now())
   updatedAt               DateTime        @updatedAt
-  friendsOf               User[]          @relation("_UsersFriends", references: [id])
-  myFriends               User[]          @relation("_UsersFriends", references: [id])
-  friendsRequestsSent     User[]          @relation("_FriendsRequests", references: [id])
-  friendsRequestsReceived User[]          @relation("_FriendsRequests", references: [id])
+  friendsOf               User[]          @relation("_UsersFriends")
+  myFriends               User[]          @relation("_UsersFriends")
+  friendsRequestsSent     User[]          @relation("_FriendsRequests")
+  friendsRequestsReceived User[]          @relation("_FriendsRequests")
   taggedInPosts           Post[]          @relation("_UsersPostsTag")
   specificAudienceInPosts Post[]          @relation("_UsersPostsSpecificAudience")
   posts                   Post[]
@@ -99,7 +99,7 @@ model GroupPost {
   author      User     @relation(name: "_GroupPostsCreated", fields: [authorId], references: [id], onDelete: Cascade)
   authorId    String
   image       String?
-  likes       User[]   @relation("_UsersGroupPostsLikes", references: [id])
+  likes       User[]   @relation("_UsersGroupPostsLikes")
   isPublished Boolean  @default(false)
   group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId     String
