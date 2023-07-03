@@ -5,6 +5,6 @@
 - create .env
 - copy `.env.example` inside `.env`
 - setup postgresql and update `DATABASE_URL` inside `.env`
-- install dependencies `npm i`
-- create database and tables `npx prisma db push`
-- start server `npm run dev`
+- install dependencies `pnpm i`
+- create database and tables `pnpx prisma db push`
+- start server `pnpm run dev`
