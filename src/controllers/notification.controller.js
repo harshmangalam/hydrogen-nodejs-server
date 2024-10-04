@@ -1,4 +1,5 @@
 const { db } = require("../utils/db");
+
 exports.fetchNotifications = async (req, res, next) => {
   try {
     const currentUser = res.locals.user;
@@ -48,6 +49,42 @@ exports.clearNotifications = async (req, res, next) => {
     return res.status(200).json({
       type: "success",
       message: "Clear all notifications",
+      data: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.deleteNotificationGroup = async (req, res, next) => {
+  try {
+    const currentUser = res.locals.user;
+    const groupId = req.params.groupId;
+
+    // Look for the notification by id and type of GROUP
+    const foundGroup = await db.notifications.findFirst({
+      where: {
+        fromUserId: currentUser.id,
+        id: groupId,
+        type: "GROUP",
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    // Delete the group if present in the DB
+    if (foundGroup != null) {
+      await db.notifications.delete({
+        where: {
+          id: foundGroup.id,
+        },
+      });
+    }
+
+    return res.status(200).json({
+      type: "success",
+      message: "Delete notification group",
       data: null,
     });
   } catch (error) {
